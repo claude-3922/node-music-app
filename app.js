@@ -8,9 +8,9 @@ const searchRoutes = require("./api/routes/search");
 app.use(morgan("dev"));
 app.use(cors())
 
-app.use("/search", searchRoutes);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use("/search", searchRoutes);
 
 app.use((req, res, next) => {
   const error = new Error("Route doesn\'t exist.");
