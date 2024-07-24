@@ -1,0 +1,30 @@
+{
+  "name": "music-proj",
+  "version": "1.0.0",
+  "description": "A music project created as a final project for CS50x. It allows users to look up tracks on youtube and download/stream them on their browser. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "keywords": [
+    "music",
+    "api",
+    "express"
+  ],
+  "author": "claude_3922",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
+    "nodemon": "^3.1.4"
+  }
+}
