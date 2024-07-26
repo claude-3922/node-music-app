@@ -1,0 +1,8 @@
+#audioPlayer {
+  margin: 40px auto;
+  max-width: 650px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: brown;
+}
