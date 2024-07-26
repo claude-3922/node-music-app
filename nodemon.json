@@ -1,6 +1,0 @@
-{
-    "env": {
-        "mongo_url": "mongodb+srv://clod3922:sigma123@cluster0.klasfck.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-        "port": 6060
-    }
-}
