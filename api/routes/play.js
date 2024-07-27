@@ -1,4 +1,3 @@
-const fs = require("fs");
 const ytdl = require("@distube/ytdl-core");
 const express = require("express");
 const router = express.Router();
@@ -71,24 +70,6 @@ router.get("/", (req, res, next) => {
         console.log(err);
       });
   }
-});
-
-router.get("/get_thumbnail", async (req, res, next) => {
-  if (!req.query.id) {
-    res.status(404).send("http://localhost:6060/images/larva.png");
-  }
-
-  const url = `https://youtube.com/watch?v=${req.query.id}`;
-
-  ytdl
-    .getInfo(url)
-    .then((info) => {
-      return res.status(200).send(`${info.thumbnail_url}`);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(404).send("http://localhost:6060/images/larva.png");
-    });
 });
 
 module.exports = router;

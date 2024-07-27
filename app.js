@@ -5,9 +5,12 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
 
+const ytdl = require("@distube/ytdl-core");
+
 const searchRoutes = require("./api/routes/search");
 const historyRoutes = require("./api/routes/history");
 const playRoutes = require("./api/routes/play");
+const songDataRoutes = require("./api/routes/songData");
 
 mongoose.connect(process.env.mongo_url).then(() => {
   console.log("Connected to mongoDB!");
@@ -35,17 +38,14 @@ app.use((req, res, next) => {
 app.set("view engine", "ejs");
 
 app.use("/index", (req, res, next) => {
-  const id = "pUanlyF510I";
-  fetch(`http://localhost:6060/play/get_thumbnail?id=${id}`)
-    .then((thumbnailUrl) => {
-      res.render("index", { songId: id, thumbnailUrl: thumbnailUrl });
-    })
-    .catch((err) => console.log(err));
+  const id = req.query.id;
+  res.render("index", { songId: id });
 });
 
 app.use("/search", searchRoutes);
 app.use("/history", historyRoutes);
 app.use("/play", playRoutes);
+app.use("/songData", songDataRoutes);
 
 app.use(express.static(path.join(__dirname, "public")));
 

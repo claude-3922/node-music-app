@@ -6,15 +6,19 @@
   <body>
     <div class="audioPlayer">
       <img
-        src="<%= thumbnailUrl %>"
+        id="audioPlayer_thumbnail"
+        src="http://localhost:6060/images/no_thumbnail.png"
+        width="160"
+        height="100"
       />
-      <audio controls width="600px" height="600px">
+
+      <audio controls oncanplaythrough="changeThumbnail('<%= songId %>')">
         <source
           src="http://localhost:6060/play?id=<%= songId %>"
           type="audio/webm"
         />
       </audio>
     </div>
-    <script></script>
+    <script src="/js/index.js"></script>
   </body>
 </html>
