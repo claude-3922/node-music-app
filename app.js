@@ -32,8 +32,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res, next) => {
-  res.status(200).sendFile(__dirname + "/view/index.html");
+app.set("view engine", "ejs");
+
+app.use("/index", (req, res, next) => {
+  const id = "pUanlyF510I";
+  fetch(`http://localhost:6060/play/get_thumbnail?id=${id}`)
+    .then((thumbnailUrl) => {
+      res.render("index", { songId: id, thumbnailUrl: thumbnailUrl });
+    })
+    .catch((err) => console.log(err));
 });
 
 app.use("/search", searchRoutes);
@@ -49,6 +56,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
+  console.log(error.message);
   res.status(error.status || 500);
   res.json({
     error: {

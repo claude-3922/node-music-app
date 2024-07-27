@@ -2,10 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const SearchHistory = require("../models/searchHistory");
-const mongoose = require("mongoose");
 
 router.get("/", (req, res, next) => {
-  const user = "admin"; //implement something that would fetch a user's username
+  const user = req.query.u;
 
   SearchHistory.find({ user: user })
     .exec()
@@ -23,7 +22,7 @@ router.get("/", (req, res, next) => {
     })
     .catch((err) => {
       res.status(500).json({
-        message: "Internal error",
+        message: "Error while fetching database",
         data: err,
       });
     });

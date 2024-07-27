@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>Node Music App</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="audioPlayer">
+      <img
+        src="<%= thumbnailUrl %>"
+      />
+      <audio controls width="600px" height="600px">
+        <source
+          src="http://localhost:6060/play?id=<%= songId %>"
+          type="audio/webm"
+        />
+      </audio>
+    </div>
+    <script></script>
+  </body>
+</html>

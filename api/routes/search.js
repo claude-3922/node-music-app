@@ -4,14 +4,19 @@ const router = express.Router();
 const SearchHistory = require("../models/searchHistory");
 const mongoose = require("mongoose");
 
-router.get("/", (req, res, next) => {
+router.post("/", (req, res, next) => {
   res.status(400).json({
-    message: "Use GET /search/query to search for songs.",
+    message: "Use GET /search?q=query to search for songs.",
   });
-  //show html page showing a search bar and shi
 });
 
-router.post("/", (req, res, next) => {
+router.get("/", (req, res, next) => {
+  if (!req.query.q) {
+    return res.status(203).json({
+      message: "No query",
+    });
+  }
+
   YouTube.search(req.query.q, { limit: 5 })
     .then((videos) => {
       let videoData = [];
@@ -21,6 +26,10 @@ router.post("/", (req, res, next) => {
           title: video.title,
           id: video.id,
           channel_id: video.channel.id,
+          channel_title: video.channel.name,
+          thumbnail_url: video.thumbnail.url,
+          channel_icon: video.channel.icon.url,
+          duration: video.duration,
         });
       });
 
@@ -59,7 +68,7 @@ router.post("/", (req, res, next) => {
 });
 
 router.get("/:query", (req, res, next) => {
-  res.redirect(301, `/search/${req.params.query}`);
+  res.redirect(301, `/search?q=${req.params.query}`);
   //get rid of this later idk
 });
 
