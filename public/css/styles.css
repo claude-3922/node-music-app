@@ -1,3 +1,8 @@
+:root {
+  --primary_gray: #808080;
+  --secondary_gray: #595959;
+}
+
 body {
   background-color: black;
 }
@@ -8,14 +13,11 @@ body {
   flex-direction: row;
   justify-content: space-evenly;
 
-  padding: 10px 0px 10px 0px;
+  padding: 2px 0px;
 
-  background-color: gray;
+  background-color: var(--primary_gray);
 
-  border-color: gray;
-  border-width: 6px;
-  border-style: solid;
-  border-radius: 24px;
+  border-radius: 16px;
 }
 
 .audioInfo {
@@ -26,6 +28,11 @@ body {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
+
+  margin: 20px 20px;
+
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .audioInfo a:hover {
@@ -61,7 +68,7 @@ body {
   flex-direction: column;
   align-content: flex-start;
   flex-wrap: wrap;
-  max-width: max-content;
+  margin: 20px 20px;
 }
 
 .audioPlayer-thumbnail-image {
@@ -74,14 +81,16 @@ body {
 }
 
 .audioPlayer-progress {
-  font-family: "Poppins", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: white;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .audioPlayer-progress p {
-  margin: 15px 0px 15px 0px;
+  margin: 14px 0px 0px 0px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .audioPlayer-progress:hover {
@@ -91,7 +100,7 @@ body {
 .audioInfo-controls {
   display: flex;
   flex-direction: row;
-  margin-top: 20px;
+  margin: 10px 20px;
 }
 
 .audioInfo-controls img {
@@ -100,8 +109,11 @@ body {
 }
 
 .audioInfo-controls img:hover {
+  /*
   -webkit-filter: invert(45%);
   filter: progid:DXImageTransform.Microsoft.BasicImage(invert='1');
+  */
+  transform: scale(1.1);
   cursor: pointer;
 }
 
@@ -109,8 +121,8 @@ body {
   display: flex;
   align-items: center;
   flex-direction: row;
-  flex-wrap: wrap;
-  align-content: flex-end;
+  flex-wrap: nowrap;
+  margin: 20px 20px;
 }
 
 .extraControls img {

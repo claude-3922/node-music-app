@@ -14,7 +14,7 @@ function formatDuration(seconds) {
 
 function setSongDuration(elapsed, total) {
   const progress = document.querySelector(".playerBar .audioPlayer .audioPlayer-progress");
-  progress.innerHTML = `<p>${formatDuration(elapsed)}/${formatDuration(
+  progress.innerHTML = `<p>${formatDuration(elapsed)} / ${formatDuration(
     total
   )}</p>`;
 }
@@ -143,3 +143,7 @@ repeatButton.addEventListener("click", () => {
     audioPlayer.loop = true;
   }
 });
+
+const volumeButton = document.querySelector(".playerBar .extraControls .extraControls-volume");
+
+
