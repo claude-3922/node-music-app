@@ -1,5 +1,5 @@
 body {
-    background-color: darkslategrey;
+  background-color: gray;
 }
 
 .audioPlayer {
@@ -9,7 +9,33 @@ body {
   align-items: center;
 }
 
-#audioPlayer_thumbnail {
-    margin: 10px;
-    border-radius: 1024px;
+.audioPlayer .audioPlayer-thumbnail .audioPlayer-thumbnail-image {
+  margin: 10px;
+  object-fit: cover;
+  border-radius: 10%;
+}
+
+.audioPlayer .audioPlayer-thumbnail .audioPlayer-thumbnail-image :hover {
+  cursor: pointer;
+}
+
+.audioPlayer .audioPlayer-controls {
+  display: flex;
+  flex-direction: row;
+  margin: 32px;
+}
+
+.audioPlayer .audioPlayer-controls img {
+  margin: 10px;
+}
+
+.audioPlayer .audioPlayer-progress {
+  margin: 10px 10px 10px 42px;
+}
+
+.audioPlayer-controls img:hover {
+  -webkit-filter: invert(75%);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(invert='1');
+  cursor: pointer;
+  transition: 0.2s;
 }

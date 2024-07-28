@@ -5,14 +5,51 @@
   </head>
   <body>
     <div class="audioPlayer">
-      <img
-        id="audioPlayer_thumbnail"
-        src="http://localhost:6060/images/no_thumbnail.png"
-        width="160"
-        height="100"
-      />
+      <a
+        class="audioPlayer-thumbnail"
+        href="http://localhost:6060/images/no_thumbnail.png"
+        title="Go to thumbnail"
+        target="_blank"
+      >
+        <img
+          class="audioPlayer-thumbnail-image"
+          src="http://localhost:6060/images/no_thumbnail.png"
+          width="100"
+          height="100"
+        />
+      </a>
 
-      <audio controls oncanplaythrough="changeThumbnail('<%= songId %>')">
+      <div class="audioPlayer-progress">
+        <p>0:00/0:00</p>
+      </div>
+
+      <div class="audioPlayer-controls">
+        <img
+          class="audioPlayer-controls-skipStart"
+          src="http://localhost:6060/icons/skip-start.svg"
+          title="Previous"
+        />
+
+        <img
+          class="audioPlayer-controls-playbackButton"
+          src="http://localhost:6060/icons/file-down.svg"
+          title="Loading"
+        />
+
+        <img
+          class="audioPlayer-controls-skipEnd"
+          src="http://localhost:6060/icons/skip-end.svg"
+          title="Next"
+        />
+
+        <img
+          class="audioPlayer-controls-repeat"
+          src="http://localhost:6060/icons/repeat.svg"
+          title="Repeat"
+        />
+      </div>
+
+      <audio autoplay oncanplaythrough="getSongData('<%= songId %>')">
         <source
           src="http://localhost:6060/play?id=<%= songId %>"
           type="audio/webm"
