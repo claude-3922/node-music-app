@@ -10,74 +10,90 @@
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <div class="audioInfo">
-      <a class="audioInfo-title" href="#" title="Watch on YouTube" target="_blank">
-        <h1 class="audioInfo-title-text">Title</h1>
-      </a>
-
-      <a class="audioInfo-channel" href="#" title="View channel on YouTube" target="_blank">
-        <h3 class="audioInfo-channel-text">Channel</h3>
-      </a>
-    </div>
-    <div class="audioPlayer">
-      <a
-        class="audioPlayer-thumbnail"
-        href="http://localhost:6060/images/no_thumbnail.png"
-        target="_blank"
-        title="Thumbnail"
-      >
-        <img
-          class="audioPlayer-thumbnail-image"
-          src="http://localhost:6060/images/no_thumbnail.png"
-          width="100"
-          height="100"
+    <div class="playerBar">
+      <span class="audioPlayer">
+        <a
+          class="audioPlayer-thumbnail"
+          href="http://localhost:6060/images/no_thumbnail.png"
+          target="_blank"
           title="Thumbnail"
-        />
-      </a>
+        >
+          <img
+            class="audioPlayer-thumbnail-image"
+            src="http://localhost:6060/images/no_thumbnail.png"
+            width="100"
+            height="100"
+            title="Thumbnail"
+          />
+        </a>
 
-      <div class="audioPlayer-progress" title="Duration" hidden>
-        <p>0:00/0:00</p>
-      </div>
+        <div class="audioPlayer-progress" title="Duration" hidden>
+          <p>0:00/0:00</p>
+        </div>
 
-      <div class="audioPlayer-controls">
+        <audio autoplay oncanplaythrough="handleSongLoaded('<%= songId %>')">
+          <source
+            src="http://localhost:6060/play?id=<%= songId %>"
+            type="audio/webm"
+          />
+        </audio>
+      </span>
+
+      <span class="audioInfo">
+        <a
+          class="audioInfo-title"
+          href="#"
+          title="Watch on YouTube"
+          target="_blank"
+        >
+          <h1 class="audioInfo-title-text">Title</h1>
+        </a>
+
+        <a
+          class="audioInfo-channel"
+          href="#"
+          title="View channel on YouTube"
+          target="_blank"
+        >
+          <h3 class="audioInfo-channel-text">Channel</h3>
+        </a>
+
+        <span class="audioInfo-controls">
+          <img
+            class="audioInfo-controls-skipStart"
+            src="http://localhost:6060/icons/skip-start.svg"
+            title="Previous"
+          />
+
+          <img
+            class="audioInfo-controls-playbackButton"
+            src="http://localhost:6060/icons/file-down.svg"
+            title="Loading"
+          />
+
+          <img
+            class="audioInfo-controls-skipEnd"
+            src="http://localhost:6060/icons/skip-end.svg"
+            title="Next"
+          />
+        </span>
+      </span>
+
+      <div class="extraControls">
         <img
-          class="audioPlayer-controls-skipStart"
-          src="http://localhost:6060/icons/skip-start.svg"
-          title="Previous"
-        />
-
-        <img
-          class="audioPlayer-controls-playbackButton"
-          src="http://localhost:6060/icons/file-down.svg"
-          title="Loading"
-        />
-
-        <img
-          class="audioPlayer-controls-skipEnd"
-          src="http://localhost:6060/icons/skip-end.svg"
-          title="Next"
-        />
-
-        <img
-          class="audioPlayer-controls-repeat"
+          class="extraControls-repeat"
           src="http://localhost:6060/icons/repeat.svg"
           title="Turn loop on"
         />
 
         <img
-          class="audioPlayer-controls-volume"
+          class="extraControls-volume"
           src="http://localhost:6060/icons/volume.svg"
           title="Adjust Volume"
         />
       </div>
-
-      <audio autoplay oncanplaythrough="handleSongLoaded('<%= songId %>')">
-        <source
-          src="http://localhost:6060/play?id=<%= songId %>"
-          type="audio/webm"
-        />
-      </audio>
     </div>
+
     <script src="/js/index.js"></script>
   </body>
 </html>

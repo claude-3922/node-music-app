@@ -1,4 +1,4 @@
-const audioPlayer = document.querySelector(".audioPlayer audio");
+const audioPlayer = document.querySelector(".playerBar .audioPlayer audio");
 
 function formatDuration(seconds) {
   const hrs = Math.floor(seconds / 3600);
@@ -13,7 +13,7 @@ function formatDuration(seconds) {
 }
 
 function setSongDuration(elapsed, total) {
-  const progress = document.querySelector(".audioPlayer .audioPlayer-progress");
+  const progress = document.querySelector(".playerBar .audioPlayer .audioPlayer-progress");
   progress.innerHTML = `<p>${formatDuration(elapsed)}/${formatDuration(
     total
   )}</p>`;
@@ -27,11 +27,11 @@ function changeThumbnail(songId) {
         .text()
         .then((url) => {
           document
-            .querySelector(".audioPlayer-thumbnail")
+            .querySelector(".playerBar .audioPlayer .audioPlayer-thumbnail")
             .setAttribute("href", url);
           document
             .querySelector(
-              ".audioPlayer-thumbnail .audioPlayer-thumbnail-image"
+              ".playerBar .audioPlayer .audioPlayer-thumbnail .audioPlayer-thumbnail-image"
             )
             .setAttribute("src", url);
         })
@@ -47,10 +47,10 @@ function changeThumbnail(songId) {
 
   function setDefaultThumbnail() {
     document
-      .querySelector(".audioPlayer-thumbnail")
+      .querySelector(".playerBar .audioPlayer .audioPlayer-thumbnail")
       .setAttribute("href", defaultUrl);
     document
-      .querySelector(".audioPlayer-thumbnail .audioPlayer-thumbnail-image")
+      .querySelector(".playerBar .audioPlayer .audioPlayer-thumbnail .audioPlayer-thumbnail-image")
       .setAttribute("src", defaultUrl);
   }
 }
@@ -68,17 +68,17 @@ function handleSongLoaded(songId) {
         };
 
         document
-          .querySelector(".audioInfo .audioInfo-title")
+          .querySelector(".playerBar .audioInfo .audioInfo-title")
           .setAttribute("href", videoDetails.video_url);
         document
-          .querySelector(".audioInfo .audioInfo-channel")
+          .querySelector(".playerBar .audioInfo .audioInfo-channel")
           .setAttribute("href", videoDetails.ownerProfileUrl);
 
         document.querySelector(
-          ".audioInfo .audioInfo-title .audioInfo-title-text"
+          ".playerBar .audioInfo .audioInfo-title .audioInfo-title-text"
         ).innerHTML = videoDetails.title;
         document.querySelector(
-          ".audioInfo .audioInfo-channel .audioInfo-channel-text"
+          ".playerBar .audioInfo .audioInfo-channel .audioInfo-channel-text"
         ).innerHTML = videoDetails.ownerChannelName;
       });
     })
@@ -89,13 +89,13 @@ function handleSongLoaded(songId) {
   changeThumbnail(songId);
 
   document
-    .querySelector(".audioPlayer .audioPlayer-progress")
+    .querySelector(".playerBar .audioPlayer .audioPlayer-progress")
     .removeAttribute("hidden");
 }
 
 audioPlayer.addEventListener("play", () => {
   const playButton = document.querySelector(
-    ".audioPlayer .audioPlayer-controls .audioPlayer-controls-playbackButton"
+    ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
   );
 
   playButton.setAttribute("title", "Pause");
@@ -104,7 +104,7 @@ audioPlayer.addEventListener("play", () => {
 
 audioPlayer.addEventListener("pause", () => {
   const pauseButton = document.querySelector(
-    ".audioPlayer .audioPlayer-controls .audioPlayer-controls-playbackButton"
+    ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
   );
 
   pauseButton.setAttribute("title", "Play");
@@ -112,7 +112,7 @@ audioPlayer.addEventListener("pause", () => {
 });
 
 const playbackButton = document.querySelector(
-  ".audioPlayer .audioPlayer-controls .audioPlayer-controls-playbackButton"
+  ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
 );
 
 playbackButton.addEventListener("click", () => {
@@ -126,7 +126,7 @@ playbackButton.addEventListener("click", () => {
 });
 
 const repeatButton = document.querySelector(
-  ".audioPlayer .audioPlayer-controls .audioPlayer-controls-repeat"
+  ".playerBar .extraControls .extraControls-repeat"
 );
 
 repeatButton.addEventListener("click", () => {
