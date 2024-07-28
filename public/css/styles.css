@@ -1,16 +1,50 @@
 body {
-  background-color: gray;
+  background-color: black;
+}
+
+.audioInfo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  left: auto;
+  position: relative;
+  max-width: 60%;
+}
+
+.audioInfo a:hover {
+  -webkit-filter: invert(25%);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(invert='1');
+  transition: 0.2s;
+}
+
+.audioInfo .audioInfo-title .audioInfo-title-text {
+  font-weight: 700;
+  margin: auto;
+}
+
+.audioInfo .audioInfo-title {
+  color: white;
+  text-decoration: none;
+}
+
+.audioInfo .audioInfo-channel .audioInfo-channel-text {
+  font-weight: 400;
+  margin: auto;
+}
+
+.audioInfo .audioInfo-channel {
+  color: white;
+  text-decoration: none;
 }
 
 .audioPlayer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  display: block;
 }
 
 .audioPlayer .audioPlayer-thumbnail .audioPlayer-thumbnail-image {
-  margin: 10px;
   object-fit: cover;
   border-radius: 10%;
 }
@@ -19,23 +53,40 @@ body {
   cursor: pointer;
 }
 
+.audioPlayer .audioPlayer-progress {
+  font-family: "Poppins", sans-serif;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.audioPlayer .audioPlayer-progress:hover {
+  cursor: default;
+}
+
 .audioPlayer .audioPlayer-controls {
   display: flex;
   flex-direction: row;
-  margin: 32px;
 }
 
 .audioPlayer .audioPlayer-controls img {
-  margin: 10px;
+  transition: 0.2s ease-in-out;
 }
 
-.audioPlayer .audioPlayer-progress {
-  margin: 10px 10px 10px 42px;
+.audioPlayer .audioPlayer-controls .audioPlayer-controls-repeat {
+  transition: all 0.2s ease-in-out;
 }
 
-.audioPlayer-controls img:hover {
-  -webkit-filter: invert(75%);
+.audioPlayer .audioPlayer-controls .audioPlayer-controls-repeat:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.audioPlayer-controls
+  img:not(
+    .audioPlayer .audioPlayer-controls .audioPlayer-controls-repeat
+  ):hover {
+  -webkit-filter: invert(45%);
   filter: progid:DXImageTransform.Microsoft.BasicImage(invert='1');
   cursor: pointer;
-  transition: 0.2s;
 }

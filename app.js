@@ -37,15 +37,15 @@ app.use((req, res, next) => {
 
 app.set("view engine", "ejs");
 
-app.use("/index", (req, res, next) => {
-  const id = req.query.id;
-  res.render("index", { songId: id });
-});
-
 app.use("/search", searchRoutes);
 app.use("/history", historyRoutes);
 app.use("/play", playRoutes);
 app.use("/songData", songDataRoutes);
+
+app.use("/index", async (req, res, next) => {
+  const id = req.query.id;
+  res.render("index", { songId: id });
+});
 
 app.use(express.static(path.join(__dirname, "public")));
 
