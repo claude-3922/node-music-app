@@ -13,7 +13,9 @@ function formatDuration(seconds) {
 }
 
 function setSongDuration(elapsed, total) {
-  const progress = document.querySelector(".playerBar .audioPlayer .audioPlayer-progress");
+  const progress = document.querySelector(
+    ".playerBar .audioPlayer .audioPlayer-progress"
+  );
   progress.innerHTML = `<p>${formatDuration(elapsed)} / ${formatDuration(
     total
   )}</p>`;
@@ -50,7 +52,9 @@ function changeThumbnail(songId) {
       .querySelector(".playerBar .audioPlayer .audioPlayer-thumbnail")
       .setAttribute("href", defaultUrl);
     document
-      .querySelector(".playerBar .audioPlayer .audioPlayer-thumbnail .audioPlayer-thumbnail-image")
+      .querySelector(
+        ".playerBar .audioPlayer .audioPlayer-thumbnail .audioPlayer-thumbnail-image"
+      )
       .setAttribute("src", defaultUrl);
   }
 }
@@ -144,6 +148,36 @@ repeatButton.addEventListener("click", () => {
   }
 });
 
-const volumeButton = document.querySelector(".playerBar .extraControls .extraControls-volume");
+const volumeSlider = document.querySelector(
+  ".playerBar .extraControls .extraControls-volumeRange"
+);
 
+volumeSlider.addEventListener("input", (event) => {
+  const sliderValue = event.target.value;
+  audioPlayer.volume = sliderValue / 100;
+});
 
+const volumeButton = document.querySelector(
+  ".playerBar .extraControls .extraControls-volume"
+);
+
+volumeButton.addEventListener("click", () => {
+  if (audioPlayer.volume > 0) {
+    volumeSlider.value = 0;
+    audioPlayer.volume = 0;
+  } else if (audioPlayer.volume === 0) {
+    volumeSlider.value = 1 * 100;
+    audioPlayer.volume = 1;
+  }
+});
+
+audioPlayer.onvolumechange = () => {
+  if (audioPlayer.volume === 0) {
+    volumeButton.setAttribute(
+      "src",
+      "http://localhost:6060/icons/volume_mute.svg"
+    );
+  } else if (audioPlayer.volume > 0) {
+    volumeButton.setAttribute("src", "http://localhost:6060/icons/volume.svg");
+  }
+};
