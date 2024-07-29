@@ -8,7 +8,6 @@ const path = require("path");
 const ytdl = require("@distube/ytdl-core");
 
 const searchRoutes = require("./api/routes/search");
-const historyRoutes = require("./api/routes/history");
 const playRoutes = require("./api/routes/play");
 const songDataRoutes = require("./api/routes/songData");
 
@@ -38,7 +37,6 @@ app.use((req, res, next) => {
 app.set("view engine", "ejs");
 
 app.use("/search", searchRoutes);
-app.use("/history", historyRoutes);
 app.use("/play", playRoutes);
 app.use("/songData", songDataRoutes);
 

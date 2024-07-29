@@ -1,10 +1,100 @@
 :root {
   --primary_gray: #808080;
-  --secondary_gray: #595959;
+  --secondary_gray: crimson;
 }
 
 body {
-  background-color: black;
+  background-color: #262626;
+}
+
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  background-color: crimson;
+  border-radius: 16px;
+}
+
+.navBar-start {
+  display: inline-flex;
+  flex-direction: row;
+  color: white;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.navBar-start-brand {
+  display: flex;
+  align-items: center;
+  padding: 10px 40px;
+}
+
+.navBar-start-brand a {
+  text-decoration: none;
+  color: white;
+}
+
+.navBar-start-brand img {
+  padding: 10px;
+}
+
+.navBar-start-brand h1 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  margin: 0px;
+}
+
+.navBar-start-searchBar {
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: white;
+
+  text-align: left;
+  text-decoration: none;
+
+  float: none;
+
+  padding: 12px 36px;
+
+  border-style: none;
+  border-color: rgb(128, 128, 128);
+  border-radius: 30px;
+  border-width: 10px;
+
+  background: rgb(128, 128, 128);
+}
+
+.navBar-start-searchBar::placeholder {
+  color: rgba(220, 220, 220, 1);
+}
+
+.navBar-start-searchBar:hover {
+  cursor: pointer;
+  background: rgba(164, 164, 164);
+}
+
+.navBar-start-searchBar:focus-visible {
+  cursor: text;
+  outline: 2px solid white;
+  background: rgb(128, 128, 128);
+}
+
+.navBar-end {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  color: white;
+}
+
+.mainSection {
+  color: white;
+}
+
+.searchResults {
+  color: white;
+  background-color: blue;
+  position: absolute;
+  z-index: 1;
 }
 
 .playerBar {
@@ -133,4 +223,8 @@ body {
 .extraControls img:hover {
   cursor: pointer;
   transform: scale(1.1);
+}
+
+.extraControls-volumeRange {
+  accent-color: var(--secondary_gray);
 }

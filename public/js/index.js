@@ -21,42 +21,15 @@ function setSongDuration(elapsed, total) {
   )}</p>`;
 }
 
-function changeThumbnail(songId) {
-  const defaultUrl = "http://localhost:6060/images/no_thumbnail.png";
-  fetch(`http://localhost:6060/songData/thumbnail?id=${songId}`)
-    .then((res) => {
-      res
-        .text()
-        .then((url) => {
-          document
-            .querySelector(".playerBar .audioPlayer .audioPlayer-thumbnail")
-            .setAttribute("href", url);
-          document
-            .querySelector(
-              ".playerBar .audioPlayer .audioPlayer-thumbnail .audioPlayer-thumbnail-image"
-            )
-            .setAttribute("src", url);
-        })
-        .catch((err) => {
-          console.log(err);
-          setDefaultThumbnail();
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-      setDefaultThumbnail();
-    });
-
-  function setDefaultThumbnail() {
-    document
-      .querySelector(".playerBar .audioPlayer .audioPlayer-thumbnail")
-      .setAttribute("href", defaultUrl);
-    document
-      .querySelector(
-        ".playerBar .audioPlayer .audioPlayer-thumbnail .audioPlayer-thumbnail-image"
-      )
-      .setAttribute("src", defaultUrl);
-  }
+function changeThumbnail(url) {
+  document
+    .querySelector(".playerBar .audioPlayer .audioPlayer-thumbnail")
+    .setAttribute("href", url);
+  document
+    .querySelector(
+      ".playerBar .audioPlayer .audioPlayer-thumbnail .audioPlayer-thumbnail-image"
+    )
+    .setAttribute("src", url);
 }
 
 function handleSongLoaded(songId) {
@@ -64,6 +37,19 @@ function handleSongLoaded(songId) {
   fetch(`http://localhost:6060/songData?id=${songId}`)
     .then((res) => {
       res.json().then((videoDetails) => {
+        const thumbnail_url =
+          videoDetails.thumbnails[4]?.url ||
+          videoDetails.thumbnails[3]?.url ||
+          videoDetails.thumbnails[2]?.url ||
+          videoDetails.thumbnails[1]?.url ||
+          videoDetails.thumbnails[0]?.url ||
+          `http://localhost:6060/images/no_thumbnail.png`;
+
+        changeThumbnail(thumbnail_url);
+        audioPlayer.volume = 1;
+        document.querySelector(
+          ".playerBar .extraControls .extraControls-volumeRange"
+        ).value = 100;
         audioPlayer.ontimeupdate = () => {
           setSongDuration(
             Number(audioPlayer.currentTime),
@@ -90,8 +76,6 @@ function handleSongLoaded(songId) {
       console.log(err);
     });
 
-  changeThumbnail(songId);
-
   document
     .querySelector(".playerBar .audioPlayer .audioPlayer-progress")
     .removeAttribute("hidden");
@@ -101,6 +85,9 @@ audioPlayer.addEventListener("play", () => {
   const playButton = document.querySelector(
     ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
   );
+  document.querySelector(
+    ".navBar .navBar-start .navBar-start-brand img"
+  ).setAttribute("src", "http://localhost:6060/icons/soundwave_animated.svg");
 
   playButton.setAttribute("title", "Pause");
   playButton.setAttribute("src", "http://localhost:6060/icons/pause.svg");
@@ -110,6 +97,9 @@ audioPlayer.addEventListener("pause", () => {
   const pauseButton = document.querySelector(
     ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
   );
+  document.querySelector(
+    ".navBar .navBar-start .navBar-start-brand img"
+  ).setAttribute("src", "http://localhost:6060/icons/soundwave.svg");
 
   pauseButton.setAttribute("title", "Play");
   pauseButton.setAttribute("src", "http://localhost:6060/icons/play.svg");
@@ -181,3 +171,36 @@ audioPlayer.onvolumechange = () => {
     volumeButton.setAttribute("src", "http://localhost:6060/icons/volume.svg");
   }
 };
+
+const searchBar = document.querySelector(
+  ".navBar-start .navBar-start-searchBar"
+);
+const searchResults = document.querySelector(".searchResults");
+
+document.addEventListener("click", () => {
+  if (document.activeElement.className === "navBar-start-searchBar") {
+    searchResults.removeAttribute("hidden");
+  } else {
+    searchResults.setAttribute("hidden", "");
+  }
+});
+
+searchBar.addEventListener("input", () => {
+  const query = searchBar.value;
+  fetch(`http://localhost:6060/search?q=${query}`)
+    .then(async (res) => {
+      let data = await res.json();
+      let listItems = ``;
+      if (!data.videos) {
+        listItems += `<li>${data.message}</li>`;
+      }
+      data.videos?.forEach((item) => {
+        listItems += `<li>${item.title}</li>\n`;
+      });
+
+      searchResults.innerHTML = `<ul>${listItems}</ul>`;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});

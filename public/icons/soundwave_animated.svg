@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-soundwave" viewBox="0 0 16 16">
+  <style>
+    .path {
+      animation: soundwave 1s infinite;
+      transform-origin: center;
+    }
+    .path:nth-child(n) {
+      animation-delay: calc(var(--n) * 0.2s);
+    }
+
+    @keyframes soundwave {
+      0%, 100% { transform: scaleY(0.5); }
+      50% { transform: scaleY(1); }
+    }
+  </style>
+  <path class="path" style="--n:0;" fill-rule="evenodd" d="M8.5 2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-1 0v-11a.5.5 0 0 1 .5-.5"/>
+  <path class="path" style="--n:1;" fill-rule="evenodd" d="M6.5 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5"/>
+  <path class="path" style="--n:2;" fill-rule="evenodd" d="M10.5 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5"/>
+  <path class="path" style="--n:3;" fill-rule="evenodd" d="M4.5 5.5A.5.5 0 0 1 5 6v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5"/>
+  <path class="path" style="--n:4;" fill-rule="evenodd" d="M12.5 5.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5"/>
+  <path class="path" style="--n:5;" fill-rule="evenodd" d="M2.5 6.5A.5.5 0 0 1 3 7v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5"/>
+  <path class="path" style="--n:6;" fill-rule="evenodd" d="M14.5 6.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5"/>
+</svg>

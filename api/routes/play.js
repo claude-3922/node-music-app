@@ -12,7 +12,6 @@ router.get("/", (req, res, next) => {
       message: "No id given",
     });
 
-    //implement something which remembers user's last queued song and play it
   } else {
     const videoId = req.query.id;
     const user = "admin";
@@ -27,8 +26,11 @@ router.get("/", (req, res, next) => {
     ytdl
       .getInfo(url)
       .then(async (info) => {
-        if (info.videoDetails.isLive || info.videoDetails.lengthSeconds > 600) {
-          return res.status(203).json({
+        if (
+          info.videoDetails.isLive ||
+          info.videoDetails.lengthSeconds > 60 * 10
+        ) {
+          return res.status(500).json({
             message:
               "Video is either a livestream or is longer than 10 minutes. Can't play.",
           });
@@ -56,12 +58,7 @@ router.get("/", (req, res, next) => {
             format: format,
           });
 
-          //const path = __dirname + `/temp/${user}_${req.body.id}.mp3`;
           readableStream.pipe(res);
-
-          readableStream.on("finish", () => {
-            //return res.sendFile(path);
-          });
         } catch (err) {
           return console.log(err);
         }
