@@ -205,8 +205,8 @@ searchBar.addEventListener("input", () => {
             <p>${item.duration}</p>
           </span>
           <span class='searchResults-list-itemMiddle'>
-            <a target='_blank' href='https://www.youtube.com/watch?v=${item.id}'> <h4>${item.title}</h4> </a>
-            <a target='_blank' href='${item.channel_url}'> <h6>${item.channel}</h6> </a>
+            <a title='${item.title}'  target='_blank' href='https://www.youtube.com/watch?v=${item.id}'> <h4>${item.title}</h4> </a>
+            <a title='${item.channel}' target='_blank' href='${item.channel_url}'> <h6>${item.channel}</h6> </a>
           </span>
           <span class='searchResults-list-buttons'>
             <img id='${item.id}' class='searchResults-list-buttons-play' width='32' height='32' src='http://localhost:6060/icons/play_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/play_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/play_nofill.svg")' onclick='playNewSong(this)'>
