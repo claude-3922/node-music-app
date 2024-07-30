@@ -5,7 +5,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
 
-const ytdl = require("@distube/ytdl-core");
+const Player = require("./api/models/player");
 
 const searchRoutes = require("./api/routes/search");
 const playRoutes = require("./api/routes/play");
@@ -40,8 +40,17 @@ app.use("/search", searchRoutes);
 app.use("/play", playRoutes);
 app.use("/songData", songDataRoutes);
 
-app.use("/index", (req, res, next) => {
-  res.render("index");
+app.use("/index", async (req, res, next) => {
+  const user = `admin`; //implement something that fetches the current user 
+
+  let songId;
+  const data = await Player.findOne({ user: user });
+
+  if(data) {
+    songId = data.now_playing.videoId;
+  }
+
+  res.render("index", { songId: songId });
 });
 
 app.use(express.static(path.join(__dirname, "public")));

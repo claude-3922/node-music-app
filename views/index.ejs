@@ -85,8 +85,9 @@
           <p>- / -</p>
         </div>
 
-        <audio autoplay>
-          <source src=""/>
+        <audio autoplay <% if (songId) { %>
+          oncanplaythrough = handleSongLoaded("<%= songId %>") <% } %> > <source src=<%=
+          songId ? `http://localhost:6060/play?id=${songId}` : "" %> />
         </audio>
       </span>
 

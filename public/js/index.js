@@ -209,7 +209,7 @@ searchBar.addEventListener("input", () => {
             <a title='${item.channel}' target='_blank' href='${item.channel_url}'> <h6>${item.channel}</h6> </a>
           </span>
           <span class='searchResults-list-buttons'>
-            <img id='${item.id}' class='searchResults-list-buttons-play' width='32' height='32' src='http://localhost:6060/icons/play_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/play_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/play_nofill.svg")' onclick='playNewSong(this)'>
+            <img id='${item.id}' class='searchResults-list-buttons-play' width='32' height='32' src='http://localhost:6060/icons/play_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/play_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/play_nofill.svg")' onclick='playNewSong(this.id)'>
             <img id='${item.id}' class='searchResults-list-buttons-add' width='32' height='32' src='http://localhost:6060/icons/plus_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/plus_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/plus_nofill.svg")'>
           </span>
 
@@ -224,8 +224,7 @@ searchBar.addEventListener("input", () => {
     });
 });
 
-function playNewSong(playButton) {
-  const songId = playButton.id;
+function playNewSong(songId) {
   audioPlayer.setAttribute("src", `http://localhost:6060/play?id=${songId}`);
   audioPlayer.oncanplaythrough = () => handleSongLoaded(songId);
   audioPlayer.type = "audio/webm";
