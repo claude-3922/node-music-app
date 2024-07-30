@@ -36,17 +36,21 @@
         />
       </span>
       <span class="navBar-end">
-        <a class="navBar-end-github" href="https://github.com/claude-3922/node-music-app" target="_blank">
-          <img src="http://localhost:6060/icons/github.svg" height="32" width="32">
-
+        <a
+          class="navBar-end-github"
+          href="https://github.com/claude-3922/node-music-app"
+          target="_blank"
+        >
+          <img
+            src="http://localhost:6060/icons/github.svg"
+            height="32"
+            width="32"
+          />
         </a>
       </span>
     </div>
 
     <div class="searchResults" hidden>
-      <ul>
-        <li>No query</li>
-      </ul>
     </div>
 
     <main>
@@ -82,11 +86,8 @@
           <p>0:00/0:00</p>
         </div>
 
-        <audio autoplay oncanplaythrough="handleSongLoaded('<%= songId %>')">
-          <source
-            src="http://localhost:6060/play?id=<%= songId %>"
-            type="audio/webm"
-          />
+        <audio autoplay>
+          <source src="" />
         </audio>
       </span>
 

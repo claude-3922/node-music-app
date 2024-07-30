@@ -27,6 +27,11 @@ body {
   display: flex;
   align-items: center;
   padding: 10px 40px;
+  transition: 0.2s ease-in-out;
+}
+
+.navBar-start-brand:hover {
+  transform: scale(1.1);
 }
 
 .navBar-start-brand a {
@@ -90,6 +95,11 @@ body {
 
 .navBar-end-github {
   padding: 20px;
+  transition: 0.2s ease-in-out;
+}
+
+.navBar-end-github:hover {
+  transform: scale(1.1);
 }
 
 .mainSection {
@@ -98,9 +108,123 @@ body {
 
 .searchResults {
   color: white;
-  background-color: blue;
+  background-color: hsl(0, 0%, 20%);
   position: absolute;
   z-index: 1;
+
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+
+  /* added padding and margin in index.js*/
+
+  border-radius: 16px;
+}
+
+.searchResults-list {
+  list-style-type: none;
+
+  max-height: 70vh;
+
+  overflow: scroll;
+
+  margin: 0px;
+  padding: 0px;
+}
+
+.searchResults-list {
+  -ms-overflow-style: none;
+}
+.searchResults-list::-webkit-scrollbar {
+  display: none;
+}
+
+.searchResults-list li:nth-of-type(odd) {
+  background-color: hsl(0, 0%, 30%);
+}
+
+.searchResults-list li:nth-of-type(even) {
+  background-color: hsl(0, 0%, 40%);
+}
+
+.searchResults-list li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+
+  border-radius: 6px;
+
+  margin: 0px;
+
+  padding: 10px 5px;
+}
+
+.searchResults-list-itemStart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  margin: 0px 10px;
+}
+
+.searchResults-list-itemStart img {
+  object-fit: cover;
+  border-radius: 10%;
+}
+
+.searchResults-list-itemStart p {
+  margin: 0px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+}
+
+.searchResults-list-itemMiddle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+
+  white-space: nowrap;
+  overflow: hidden;
+
+  margin: 0px 10px;
+}
+
+.searchResults-list-itemMiddle a {
+  text-decoration: none;
+  color: white;
+}
+
+.searchResults-list-itemMiddle h4,
+h6 {
+  margin: 0px;
+  max-width: 60ch;
+  width: 60ch;
+}
+
+.searchResults-list-itemMiddle h4:hover,
+h6:hover {
+  opacity: 60%;
+}
+
+.searchResults-list-buttons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+
+  margin: 0px 10px;
+}
+
+.searchResults-list-buttons img {
+  margin: 5px;
+  transition: 0.2s ease-in-out;
+}
+
+.searchResults-list-buttons img:hover {
+  cursor: pointer;
+  transform: scale(1.1);
 }
 
 .playerBar {
@@ -127,13 +251,15 @@ body {
 
   margin: 20px 20px;
 
+  width: 90ch;
+  max-width: 90ch;
+
   white-space: nowrap;
   overflow: hidden;
 }
 
 .audioInfo a:hover {
-  -webkit-filter: invert(25%);
-  filter: progid:DXImageTransform.Microsoft.BasicImage(invert='1');
+  opacity: 60%;
   transition: 0.2s;
 }
 
@@ -177,16 +303,18 @@ body {
 }
 
 .audioPlayer-progress {
+  display: flex;
+  justify-content: center;
   font-family: "Montserrat", sans-serif;
   color: white;
   font-size: 18px;
   font-weight: 400;
+  width: 13ch;
+  max-width: 13ch;
 }
 
 .audioPlayer-progress p {
   margin: 14px 0px 0px 0px;
-  white-space: nowrap;
-  overflow: hidden;
 }
 
 .audioPlayer-progress:hover {

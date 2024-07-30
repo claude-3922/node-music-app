@@ -40,9 +40,8 @@ app.use("/search", searchRoutes);
 app.use("/play", playRoutes);
 app.use("/songData", songDataRoutes);
 
-app.use("/index", async (req, res, next) => {
-  const id = req.query.id;
-  res.render("index", { songId: id });
+app.use("/index", (req, res, next) => {
+  res.render("index");
 });
 
 app.use(express.static(path.join(__dirname, "public")));

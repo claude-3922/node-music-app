@@ -85,9 +85,9 @@ audioPlayer.addEventListener("play", () => {
   const playButton = document.querySelector(
     ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
   );
-  document.querySelector(
-    ".navBar .navBar-start .navBar-start-brand img"
-  ).setAttribute("src", "http://localhost:6060/icons/soundwave_animated.svg");
+  document
+    .querySelector(".navBar .navBar-start .navBar-start-brand img")
+    .setAttribute("src", "http://localhost:6060/icons/soundwave_animated.svg");
 
   playButton.setAttribute("title", "Pause");
   playButton.setAttribute("src", "http://localhost:6060/icons/pause.svg");
@@ -97,9 +97,9 @@ audioPlayer.addEventListener("pause", () => {
   const pauseButton = document.querySelector(
     ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
   );
-  document.querySelector(
-    ".navBar .navBar-start .navBar-start-brand img"
-  ).setAttribute("src", "http://localhost:6060/icons/soundwave.svg");
+  document
+    .querySelector(".navBar .navBar-start .navBar-start-brand img")
+    .setAttribute("src", "http://localhost:6060/icons/soundwave.svg");
 
   pauseButton.setAttribute("title", "Play");
   pauseButton.setAttribute("src", "http://localhost:6060/icons/play.svg");
@@ -176,6 +176,7 @@ const searchBar = document.querySelector(
   ".navBar-start .navBar-start-searchBar"
 );
 const searchResults = document.querySelector(".searchResults");
+const resultList = document.querySelector(".searchResults .searchResults-list");
 
 document.addEventListener("click", () => {
   if (document.activeElement.className === "navBar-start-searchBar") {
@@ -192,15 +193,38 @@ searchBar.addEventListener("input", () => {
       let data = await res.json();
       let listItems = ``;
       if (!data.videos) {
-        listItems += `<li>${data.message}</li>`;
+        console.log("No results found.");
       }
       data.videos?.forEach((item) => {
-        listItems += `<li>${item.title}</li>\n`;
+        listItems += `<li>
+          <span class='searchResults-list-itemStart'>
+            <a target='_blank' href='${item.thumbnail}'> <img src='${item.thumbnail}' height='50' width='50'> </a>
+            <p>${item.duration}</p>
+          </span>
+          <span class='searchResults-list-itemMiddle'>
+            <a target='_blank' href='https://www.youtube.com/watch?v=${item.id}'> <h4>${item.title}</h4> </a>
+            <a target='_blank' href='${item.channel_url}'> <h6>${item.channel}</h6> </a>
+          </span>
+          <span class='searchResults-list-buttons'>
+            <img id='${item.id}' class='searchResults-list-buttons-play' width='32' height='32' src='http://localhost:6060/icons/play_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/play_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/play_nofill.svg")' onclick='playNewSong(this)'>
+            <img id='${item.id}' class='searchResults-list-buttons-add' width='32' height='32' src='http://localhost:6060/icons/plus_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/plus_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/plus_nofill.svg")'>
+          </span>
+
+        </li>\n`;
       });
 
-      searchResults.innerHTML = `<ul>${listItems}</ul>`;
+      searchResults.style = "padding:10px; margin:5px;"
+      searchResults.innerHTML = `<ul class='searchResults-list'>${listItems}</ul>`;
     })
     .catch((err) => {
       console.log(err);
     });
 });
+
+function playNewSong(playButton) {
+  const songId = playButton.id;
+  audioPlayer.setAttribute("src", `http://localhost:6060/play?id=${songId}`);
+  audioPlayer.oncanplaythrough = () => handleSongLoaded(songId);
+  audioPlayer.type = "audio/webm";
+  audioPlayer.load();
+}

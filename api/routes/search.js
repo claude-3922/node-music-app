@@ -9,14 +9,14 @@ router.get("/", (req, res, next) => {
     });
   }
 
-  ytsr(req.query.q, { safeSearch: true, limit: 10 })
+  ytsr(req.query.q, { safeSearch: true, limit: 7 })
     .then((result) => {
       let filteredResult = result.items.filter((item) => {
         const durationParts = item.duration.split(":");
         if(durationParts.length > 2) return false;
         const minutes = Number(durationParts[0]);
 
-        return minutes <= 10 && !item.isLive;
+        return minutes < 10 && !item.isLive;
       });
 
       const videos = [];
