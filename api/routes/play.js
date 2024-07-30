@@ -30,7 +30,7 @@ router.get("/", (req, res, next) => {
           info.videoDetails.isLive ||
           info.videoDetails.lengthSeconds > 60 * 10
         ) {
-          return res.status(500).json({
+          return res.status(413).json({
             message:
               "Video is either a livestream or is longer than 10 minutes. Can't play.",
           });
@@ -42,6 +42,7 @@ router.get("/", (req, res, next) => {
         });
 
         try {
+          
           if ((await Player.countDocuments({ user: user })) > 0) {
             await Player.deleteMany({ user: user });
           }
@@ -53,6 +54,7 @@ router.get("/", (req, res, next) => {
           });
 
           await playerState.save();
+          
 
           const readableStream = ytdl.downloadFromInfo(info, {
             format: format,
@@ -65,6 +67,9 @@ router.get("/", (req, res, next) => {
       })
       .catch((err) => {
         console.log(err);
+        res.status(500).json({
+          message: "Error while piping back audio",
+        });
       });
   }
 });

@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get("/", (req, res, next) => {
   if (!req.query.q) {
-    return res.status(203).json({
+    return res.status(400).json({
       message: "No query",
     });
   }

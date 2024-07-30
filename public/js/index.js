@@ -57,12 +57,20 @@ function handleSongLoaded(songId) {
           );
         };
 
-        document
-          .querySelector(".playerBar .audioInfo .audioInfo-title")
-          .setAttribute("href", videoDetails.video_url);
-        document
-          .querySelector(".playerBar .audioInfo .audioInfo-channel")
-          .setAttribute("href", videoDetails.ownerProfileUrl);
+        const songTitle = document.querySelector(
+          ".playerBar .audioInfo .audioInfo-title"
+        );
+        const channelTitle = document.querySelector(
+          ".playerBar .audioInfo .audioInfo-channel"
+        );
+
+        songTitle.setAttribute("href", videoDetails.video_url);
+        songTitle.setAttribute("title", videoDetails.title);
+        songTitle.setAttribute("target", "_blank");
+
+        channelTitle.setAttribute("href", videoDetails.ownerProfileUrl);
+        channelTitle.setAttribute("title", videoDetails.ownerChannelName);
+        channelTitle.setAttribute("target", "_blank");
 
         document.querySelector(
           ".playerBar .audioInfo .audioInfo-title .audioInfo-title-text"
@@ -81,33 +89,28 @@ function handleSongLoaded(songId) {
     .removeAttribute("hidden");
 }
 
+const playbackButton = document.querySelector(
+  ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
+);
+
 audioPlayer.addEventListener("play", () => {
-  const playButton = document.querySelector(
-    ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
-  );
   document
     .querySelector(".navBar .navBar-start .navBar-start-brand img")
     .setAttribute("src", "http://localhost:6060/icons/soundwave_animated.svg");
 
-  playButton.setAttribute("title", "Pause");
-  playButton.setAttribute("src", "http://localhost:6060/icons/pause.svg");
+    playbackButton.setAttribute("title", "Pause");
+    playbackButton.setAttribute("src", "http://localhost:6060/icons/pause.svg");
 });
 
 audioPlayer.addEventListener("pause", () => {
-  const pauseButton = document.querySelector(
-    ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
-  );
   document
     .querySelector(".navBar .navBar-start .navBar-start-brand img")
     .setAttribute("src", "http://localhost:6060/icons/soundwave.svg");
 
-  pauseButton.setAttribute("title", "Play");
-  pauseButton.setAttribute("src", "http://localhost:6060/icons/play.svg");
+    playbackButton.setAttribute("title", "Play");
+    playbackButton.setAttribute("src", "http://localhost:6060/icons/play.svg");
 });
 
-const playbackButton = document.querySelector(
-  ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-playbackButton"
-);
 
 playbackButton.addEventListener("click", () => {
   if (audioPlayer.paused) {
@@ -213,7 +216,7 @@ searchBar.addEventListener("input", () => {
         </li>\n`;
       });
 
-      searchResults.style = "padding:10px; margin:5px;"
+      searchResults.style = "padding:10px; margin:5px;";
       searchResults.innerHTML = `<ul class='searchResults-list'>${listItems}</ul>`;
     })
     .catch((err) => {
