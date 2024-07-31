@@ -54,11 +54,11 @@
 
     <main>
       <div class="mainSection">
+        <h1>Queue</h1>
         <ul>
-          <li>THIS IS</li>
-          <li>FOR</li>
-          <li>DEBUGGING</li>
-          <li>PURPOSES</li>
+          <% for( let i = 0; i < queue?.length; i++ ) { %>
+          <li><%= queue[i]?.title %></li>
+          <% } %>
         </ul>
       </div>
     </main>

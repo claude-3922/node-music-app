@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
+
 const ytdl = require("@distube/ytdl-core");
 
 router.get("/", (req, res, next) => {
   const songId = req.query.id;
 
   if (!songId) {
-    return res.status(203).json({
+    return res.status(400).json({
       message: "No song id query in request",
     });
   }

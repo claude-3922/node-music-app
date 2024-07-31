@@ -1,6 +1,7 @@
-const ytsr = require("@distube/ytsr");
 const express = require("express");
 const router = express.Router();
+
+const ytsr = require("@distube/ytsr");
 
 router.get("/", (req, res, next) => {
   if (!req.query.q) {
@@ -13,7 +14,7 @@ router.get("/", (req, res, next) => {
     .then((result) => {
       let filteredResult = result.items.filter((item) => {
         const durationParts = item.duration.split(":");
-        if(durationParts.length > 2) return false;
+        if (durationParts.length > 2) return false;
         const minutes = Number(durationParts[0]);
 
         return minutes < 10 && !item.isLive;

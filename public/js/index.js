@@ -214,7 +214,7 @@ searchBar.addEventListener("input", () => {
           </span>
           <span class='searchResults-list-buttons'>
             <img id='${item.id}' class='searchResults-list-buttons-play' width='32' height='32' src='http://localhost:6060/icons/play_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/play_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/play_nofill.svg")' onclick='playNewSong(this.id)'>
-            <img id='${item.id}' class='searchResults-list-buttons-add' width='32' height='32' src='http://localhost:6060/icons/plus_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/plus_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/plus_nofill.svg")'>
+            <img id='${item.id}' class='searchResults-list-buttons-add' width='32' height='32' src='http://localhost:6060/icons/plus_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/plus_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/plus_nofill.svg")' onclick='addToQueue(this.id)'>
           </span>
 
         </li>\n`;
@@ -227,6 +227,10 @@ searchBar.addEventListener("input", () => {
       console.log(err);
     });
 });
+
+function addToQueue(songId) {
+
+}
 
 function playNewSong(songId) {
   audioPlayer.setAttribute("src", `http://localhost:6060/play?id=${songId}`);
