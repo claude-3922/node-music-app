@@ -199,7 +199,7 @@ searchBar.addEventListener("input", () => {
       let listItems = ``;
       if (!data.videos) {
         console.log("No results found.");
-        searchResults.setAttribute("hidden", "");
+        searchResults.setAttribute("style", "margin: 0px; padding: 0px; display: none;");
         return;
       }
       data.videos?.forEach((item) => {
@@ -229,7 +229,55 @@ searchBar.addEventListener("input", () => {
 });
 
 function addToQueue(songId) {
+  const user = "admin";
+  console.log(songId);
 
+  fetch(`http://localhost:6060/queue/add/`, {
+    method: "POST",
+    body: JSON.stringify({ user: user, id: songId }),
+    headers: { "Content-Type": "application/json" },
+  })
+    .then(async (data) => {
+      const res = await data.json();
+      if (!res.queue) {
+        return console.log(`${res.message}`);
+      }
+
+      let queue = res.queue;
+      let playing = false;
+
+      let now_playing_data = await fetch(
+        `http://localhost:6060/queue/now_playing?user=${user}`
+      );
+
+      let playingDetails = await now_playing_data.json();
+
+      playing = Object.keys(playingDetails.now_playing).length > 0;
+      console.log(playing ? `Currently playing` : `Currently not playing`);
+
+      if (playing === false) {
+        playNewSong(queue[0].videoId);
+        let newQueue = await fetch(`http://localhost:6060/queue/remove`, {
+          method: "POST",
+          body: JSON.stringify({ user: user }),
+          headers: { "Content-Type": "application/json" },
+        });
+
+        let newData = await newQueue.json();
+        queue = newData.queue;
+      }
+      let listItems = ``;
+      if (queue?.length > 0) {
+        queue.forEach((song) => {
+          listItems += `<li>${song.title}</li>`;
+        });
+      } else {
+        listItems += `<li>No item in queue</li>`;
+      }
+
+      document.querySelector(".mainSection ul").innerHTML = `${listItems}`;
+    })
+    .catch((err) => console.log(err));
 }
 
 function playNewSong(songId) {
