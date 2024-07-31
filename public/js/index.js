@@ -98,8 +98,8 @@ audioPlayer.addEventListener("play", () => {
     .querySelector(".navBar .navBar-start .navBar-start-brand img")
     .setAttribute("src", "http://localhost:6060/icons/soundwave_animated.svg");
 
-    playbackButton.setAttribute("title", "Pause");
-    playbackButton.setAttribute("src", "http://localhost:6060/icons/pause.svg");
+  playbackButton.setAttribute("title", "Pause");
+  playbackButton.setAttribute("src", "http://localhost:6060/icons/pause.svg");
 });
 
 audioPlayer.addEventListener("pause", () => {
@@ -107,12 +107,14 @@ audioPlayer.addEventListener("pause", () => {
     .querySelector(".navBar .navBar-start .navBar-start-brand img")
     .setAttribute("src", "http://localhost:6060/icons/soundwave.svg");
 
-    playbackButton.setAttribute("title", "Play");
-    playbackButton.setAttribute("src", "http://localhost:6060/icons/play.svg");
+  playbackButton.setAttribute("title", "Play");
+  playbackButton.setAttribute("src", "http://localhost:6060/icons/play.svg");
 });
 
-
 playbackButton.addEventListener("click", () => {
+  if (playbackButton.src === "http://localhost:6060/icons/question.svg") {
+    return; // very bruteforce way
+  }
   if (audioPlayer.paused) {
     audioPlayer.dispatchEvent(new Event("play"));
     audioPlayer.play();
@@ -197,6 +199,8 @@ searchBar.addEventListener("input", () => {
       let listItems = ``;
       if (!data.videos) {
         console.log("No results found.");
+        searchResults.setAttribute("hidden", "");
+        return;
       }
       data.videos?.forEach((item) => {
         listItems += `<li>
@@ -216,8 +220,8 @@ searchBar.addEventListener("input", () => {
         </li>\n`;
       });
 
-      searchResults.style = "padding:10px; margin:5px;";
       searchResults.innerHTML = `<ul class='searchResults-list'>${listItems}</ul>`;
+      searchResults.style = "padding:10px; margin:5px;";
     })
     .catch((err) => {
       console.log(err);

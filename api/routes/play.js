@@ -42,6 +42,7 @@ router.get("/", (req, res, next) => {
         });
 
         try {
+          let start = new Date().getTime();
           
           if ((await Player.countDocuments({ user: user })) > 0) {
             await Player.deleteMany({ user: user });
@@ -54,7 +55,9 @@ router.get("/", (req, res, next) => {
           });
 
           await playerState.save();
-          
+
+          let end = new Date().getTime();
+          console.log(`INFO Saved document to database, took ${end-start}ms`);
 
           const readableStream = ytdl.downloadFromInfo(info, {
             format: format,

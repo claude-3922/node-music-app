@@ -12,7 +12,7 @@ const playRoutes = require("./api/routes/play");
 const songDataRoutes = require("./api/routes/songData");
 
 mongoose.connect(process.env.mongo_url).then(() => {
-  console.log("Connected to mongoDB!");
+  console.log("INFO Connected to mongoDB!");
 });
 
 app.use(morgan("dev"));
@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  console.log(error.message);
+  console.log(`ERROR ${error.message}`);
   res.status(error.status || 500);
   res.json({
     error: {
