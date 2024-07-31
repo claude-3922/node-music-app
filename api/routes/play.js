@@ -43,7 +43,6 @@ router.get("/", (req, res, next) => {
 
         try {
           let start = new Date().getTime();
-          
           if ((await Player.countDocuments({ user: user })) > 0) {
             await Player.deleteMany({ user: user });
           }
