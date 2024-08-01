@@ -279,36 +279,9 @@ function addToQueue(songId) {
       updateQueue(queue);
     })
     .catch((err) => console.log(err));
-
-  /*
-  fetch(`http://localhost:6060/queue/add/`, {
-    method: "POST",
-    body: JSON.stringify({ user: user, id: songId }),
-    headers: { "Content-Type": "application/json" },
-  })
-    .then(async (data) => {
-      const res = await data.json();
-
-      let queue = res.queue;
-
-      if (localStorage.getItem("now_playing_id") === null) {
-        playNewSong(queue[0].videoId);
-        let newQueue = await fetch(`http://localhost:6060/queue/remove`, {
-          method: "POST",
-          body: JSON.stringify({ user: user }),
-          headers: { "Content-Type": "application/json" },
-        });
-        let newData = await newQueue.json();
-        queue = newData.queue;
-      }
-      updateQueue(queue);
-    })
-    .catch((err) => console.log(err));
-    */
 }
 
 function playFromSearch(songId) {
-  //const user = "admin";
 
   const now_playing_id = localStorage.getItem("now_playing_id");
 
@@ -320,23 +293,6 @@ function playFromSearch(songId) {
   }
 
   playNewSong(songId);
-
-  /*
-  if (localStorage.getItem("now_playing_id") !== null) {
-    fetch(`http://localhost:6060/queue/prev/add`, {
-      method: "POST",
-      body: JSON.stringify({
-        user: user,
-        id: localStorage.getItem("now_playing_id"),
-      }),
-      headers: { "Content-Type": "application/json" },
-    }).then(async (newPrevQueueRes) => {
-      console.log(await newPrevQueueRes.json());
-    });
-  }
-
-  playNewSong(songId);
-  */
 }
 
 function playNewSong(songId) {
@@ -363,37 +319,6 @@ function playNextFromQueue() {
   localStorage.setItem("prev_queue", JSON.stringify(prev_queue));
 
   updateQueue(queue);
-
-  /*
-  fetch(`http://localhost:6060/queue?user=${user}`).then(async (data) => {
-    const queueData = await data.json();
-    let queue = queueData.queue;
-    if (queue?.length > 0) {
-      const newData = await fetch(`http://localhost:6060/queue/remove`, {
-        method: "POST",
-        body: JSON.stringify({ user: user }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const newQueueData = await newData.json();
-      playNewSong(newQueueData.removed.videoId);
-
-      const newPrevQueueData = await fetch(
-        `http://localhost:6060/queue/prev/add/`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            user: user,
-            id: localStorage.getItem("now_playing_id"),
-          }),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      console.log(await newPrevQueueData.json());
-
-      updateQueue(newQueueData.queue);
-    }
-  });
-  */
 }
 
 audioPlayer.onended = () => {
@@ -419,7 +344,6 @@ skipNextButton.onclick = () => {
 };
 
 skipPreviousButton.onclick = () => {
-  //const user = "admin";
 
   const prev_queue = JSON.parse(localStorage.getItem("prev_queue") || "[]");
   if (prev_queue.length === 0) {
@@ -429,22 +353,4 @@ skipPreviousButton.onclick = () => {
   playNewSong(prev_queue[prev_queue.length - 1].videoId);
   prev_queue.pop();
   localStorage.setItem("prev_queue", JSON.stringify(prev_queue));
-
-  /*
-  fetch(`http://localhost:6060/queue/prev/remove/`, {
-    method: "POST",
-    body: JSON.stringify({ user: user }),
-    headers: { "Content-Type": "application/json" },
-  })
-    .then(async (res) => {
-      const data = await res.json();
-
-      if (Object.keys(data.removed).length > 0) {
-        playNewSong(data.removed?.videoId);
-      } else {
-        audioPlayer.currentTime = 1;
-      }
-    })
-    .catch((err) => console.log(err));
-  */
 };
