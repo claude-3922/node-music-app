@@ -28,6 +28,27 @@ router.get("/", async (req, res, next) => {
   });
 });
 
+router.get("/prev", async (req, res, next) => {
+  const user = req.query.user;
+
+  if (!user) {
+    return res.status(400).json({
+      message: "No username given in url",
+    });
+  }
+
+  const userDocument = await Player.findOne({ user: user });
+  if (!userDocument) {
+    return res.status(204).json({
+      message: "No document found for given user",
+    });
+  }
+
+  res.status(200).json({
+    previous_queue: userDocument.previous_queue,
+  });
+});
+
 router.get("/now_playing", async (req, res, next) => {
   const user = req.query.user;
 

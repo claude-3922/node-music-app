@@ -37,6 +37,8 @@ function handleSongLoaded(songId) {
   fetch(`http://localhost:6060/songData?id=${songId}`)
     .then((res) => {
       res.json().then((videoDetails) => {
+        localStorage.setItem("now_playing_id", songId);
+
         const thumbnail_url =
           videoDetails.thumbnails[4]?.url ||
           videoDetails.thumbnails[3]?.url ||
@@ -112,7 +114,7 @@ audioPlayer.addEventListener("pause", () => {
 });
 
 playbackButton.addEventListener("click", () => {
-  if (playbackButton.src === "http://localhost:6060/icons/question.svg") {
+  if (localStorage.getItem("now_playing_id") === null) {
     return; // very bruteforce way
   }
   if (audioPlayer.paused) {
@@ -241,30 +243,16 @@ function addToQueue(songId) {
   })
     .then(async (data) => {
       const res = await data.json();
-      if (!res.queue) {
-        return console.log(`${res.message}`);
-      }
 
       let queue = res.queue;
-      let playing = false;
 
-      let now_playing_data = await fetch(
-        `http://localhost:6060/queue/now_playing?user=${user}`
-      );
-
-      let playingDetails = await now_playing_data.json();
-
-      playing = Object.keys(playingDetails.now_playing).length > 0;
-      console.log(playing ? `Currently playing` : `Currently not playing`);
-
-      if (playing === false) {
+      if (localStorage.getItem("now_playing_id") === null) {
         playNewSong(queue[0].videoId);
         let newQueue = await fetch(`http://localhost:6060/queue/remove`, {
           method: "POST",
           body: JSON.stringify({ user: user }),
           headers: { "Content-Type": "application/json" },
         });
-
         let newData = await newQueue.json();
         queue = newData.queue;
       }
@@ -289,25 +277,18 @@ function updateQueue(queue) {
 function playFromSearch(songId) {
   const user = "admin";
 
-  fetch(`http://localhost:6060/queue/now_playing?user=${user}`).then(
-    async (npRes) => {
-      const npData = await npRes.json();
-      const nowPlaying = npData.now_playing;
-      console.log(nowPlaying);
-
-      if (Object.keys(nowPlaying).length > 0) {
-        const newPrevQueueRes = await fetch(
-          `http://localhost:6060/queue/prev/add`,
-          {
-            method: "POST",
-            body: JSON.stringify({ user: user, id: nowPlaying.videoId }),
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        console.log(await newPrevQueueRes.json());
-      }
-    }
-  );
+  if (localStorage.getItem("now_playing_id") !== null) {
+    fetch(`http://localhost:6060/queue/prev/add`, {
+      method: "POST",
+      body: JSON.stringify({
+        user: user,
+        id: localStorage.getItem("now_playing_id"),
+      }),
+      headers: { "Content-Type": "application/json" },
+    }).then(async (newPrevQueueRes) => {
+      console.log(await newPrevQueueRes.json());
+    });
+  }
 
   playNewSong(songId);
 }
@@ -315,18 +296,11 @@ function playFromSearch(songId) {
 function playNewSong(songId) {
   audioPlayer.setAttribute("src", `http://localhost:6060/play?id=${songId}`);
   audioPlayer.oncanplaythrough = () => handleSongLoaded(songId);
-  audioPlayer.type = "audio/webm";
   audioPlayer.load();
 }
 
 function playNextFromQueue(user) {
   fetch(`http://localhost:6060/queue?user=${user}`).then(async (data) => {
-    const npRes = await fetch(
-      `http://localhost:6060/queue/now_playing?user=${user}`
-    );
-    const npData = await npRes.json();
-    const nowPlaying = npData.now_playing;
-
     const queueData = await data.json();
     let queue = queueData.queue;
     if (queue?.length > 0) {
@@ -342,7 +316,10 @@ function playNextFromQueue(user) {
         `http://localhost:6060/queue/prev/add/`,
         {
           method: "POST",
-          body: JSON.stringify({ user: user, id: nowPlaying.videoId }),
+          body: JSON.stringify({
+            user: user,
+            id: localStorage.getItem("now_Playing_id"),
+          }),
           headers: { "Content-Type": "application/json" },
         }
       );
@@ -376,35 +353,21 @@ skipNextButton.onclick = () => {
 };
 
 skipPreviousButton.onclick = () => {
-  /*
-  fetch(`http://localhost:6060/previous_queue?user=${user}`).then(async (data) => {
-    const nowPlayingData = await fetch(
-      `http://localhost:6060/queue/now_playing?user=${user}`
-    );
-    const nowPlayingRes = await nowPlayingData.json();
-    const nowPlaying = nowPlayingRes.now_playing;
+  const user = "admin";
 
-    const prevQueueData = await data.json();
-    let prevQueue = prevQueueData.queue;
-    if (prevQueue?.length > 0) {
-      const newQueueData = await fetch(
-        `http://localhost:6060/queue/add/`,
-        {
-          method: "POST",
-          body: JSON.stringify({ user: user, id: nowPlaying.videoId }),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      console.log(await newQueueData.json());
-      playNewSong(prevQueue[0].videoId);
-      const newPrevQueueRes = await fetch(`http://localhost:6060/previous_queue/remove`, {
-        method: "POST",
-        body: JSON.stringify({ user: user }),
-        headers: { "Content-Type": "application/json" },
-      });
-      //const newPrevQueueData = await newPrevQueueRes.json();
-      //updateQueue(newQueueData.queue);
-    }
-  });
-*/
+  fetch(`http://localhost:6060/queue/prev/remove/`, {
+    method: "POST",
+    body: JSON.stringify({ user: user }),
+    headers: { "Content-Type": "application/json" },
+  })
+    .then(async (res) => {
+      const data = await res.json();
+
+      if (Object.keys(data.removed).length > 0) {
+        playNewSong(data.removed?.videoId);
+      } else {
+        audioPlayer.currentTime = 1;
+      }
+    })
+    .catch((err) => console.log(err));
 };
