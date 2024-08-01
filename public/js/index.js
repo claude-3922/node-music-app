@@ -318,7 +318,7 @@ function playNextFromQueue(user) {
           method: "POST",
           body: JSON.stringify({
             user: user,
-            id: localStorage.getItem("now_Playing_id"),
+            id: localStorage.getItem("now_playing_id"),
           }),
           headers: { "Content-Type": "application/json" },
         }
