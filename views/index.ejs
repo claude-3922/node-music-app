@@ -55,11 +55,7 @@
     <main>
       <div class="mainSection">
         <h1>Queue</h1>
-        <ul>
-          <% for( let i = 0; i < queue?.length; i++ ) { %>
-          <li><%= queue[i]?.title %></li>
-          <% } %>
-        </ul>
+        <ul></ul>
       </div>
     </main>
 
@@ -85,10 +81,7 @@
           <p>- / -</p>
         </div>
 
-        <audio autoplay <% if (songId) { %>
-          oncanplaythrough = 'handleSongLoaded(`<%= songId %>`)'
-          src='http://localhost:6060/play?id=<%= songId%>' <% } %> >
-        </audio>
+        <audio autoplay></audio>
       </span>
 
       <span class="audioInfo">

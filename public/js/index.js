@@ -1,5 +1,31 @@
 const audioPlayer = document.querySelector(".playerBar .audioPlayer audio");
 
+function updateQueue(queue) {
+  let listItems = ``;
+  if (queue?.length > 0) {
+    queue.forEach((song) => {
+      listItems += `<li>${song.title}</li>`;
+    });
+  } else {
+    listItems += `<li>No item in queue</li>`;
+  }
+
+  document.querySelector(".mainSection ul").innerHTML = `${listItems}`;
+}
+
+window.onload = () => {
+  const nowPlaying_id = localStorage.getItem("now_playing_id");
+  if (nowPlaying_id !== null) {
+    audioPlayer.setAttribute(
+      "src",
+      `http://localhost:6060/play?id=${nowPlaying_id}`
+    );
+    audioPlayer.oncanplaythrough = () => handleSongLoaded(nowPlaying_id);
+  }
+
+  updateQueue(JSON.parse(localStorage.getItem("queue" || "[]")));
+};
+
 function formatDuration(seconds) {
   const hrs = Math.floor(seconds / 3600);
   const mins = Math.floor((seconds % 3600) / 60);
@@ -37,6 +63,7 @@ function handleSongLoaded(songId) {
   fetch(`http://localhost:6060/songData?id=${songId}`)
     .then((res) => {
       res.json().then((videoDetails) => {
+        localStorage.setItem("now_playing", JSON.stringify(videoDetails));
         localStorage.setItem("now_playing_id", songId);
 
         const thumbnail_url =
@@ -114,7 +141,7 @@ audioPlayer.addEventListener("pause", () => {
 });
 
 playbackButton.addEventListener("click", () => {
-  if (localStorage.getItem("now_playing_id") === null) {
+  if (audioPlayer.currentSrc === "") {
     return; // very bruteforce way
   }
   if (audioPlayer.paused) {
@@ -234,8 +261,26 @@ searchBar.addEventListener("input", () => {
 });
 
 function addToQueue(songId) {
-  const user = "admin";
+  //const user = "admin";
+  fetch(`http://localhost:6060/songData?id=${songId}`)
+    .then(async (res) => {
+      const data = await res.json();
+      let songData = data;
 
+      const queue = JSON.parse(localStorage.getItem("queue") || "[]");
+      queue.push(songData);
+
+      localStorage.setItem("queue", JSON.stringify(queue));
+      if (localStorage.getItem("now_playing_id") === null) {
+        const songToPlay = queue.shift();
+        playNewSong(songToPlay.videoId);
+        localStorage.setItem("queue", JSON.stringify(queue));
+      }
+      updateQueue(queue);
+    })
+    .catch((err) => console.log(err));
+
+  /*
   fetch(`http://localhost:6060/queue/add/`, {
     method: "POST",
     body: JSON.stringify({ user: user, id: songId }),
@@ -259,24 +304,24 @@ function addToQueue(songId) {
       updateQueue(queue);
     })
     .catch((err) => console.log(err));
-}
-
-function updateQueue(queue) {
-  let listItems = ``;
-  if (queue?.length > 0) {
-    queue.forEach((song) => {
-      listItems += `<li>${song.title}</li>`;
-    });
-  } else {
-    listItems += `<li>No item in queue</li>`;
-  }
-
-  document.querySelector(".mainSection ul").innerHTML = `${listItems}`;
+    */
 }
 
 function playFromSearch(songId) {
-  const user = "admin";
+  //const user = "admin";
 
+  const now_playing_id = localStorage.getItem("now_playing_id");
+
+  if (now_playing_id !== null) {
+    const prevQueue = JSON.parse(localStorage.getItem("prev_queue") || "[]");
+    const songData = JSON.parse(localStorage.getItem("now_playing"));
+    prevQueue.push(songData);
+    localStorage.setItem("prev_queue", JSON.stringify(prevQueue));
+  }
+
+  playNewSong(songId);
+
+  /*
   if (localStorage.getItem("now_playing_id") !== null) {
     fetch(`http://localhost:6060/queue/prev/add`, {
       method: "POST",
@@ -291,6 +336,7 @@ function playFromSearch(songId) {
   }
 
   playNewSong(songId);
+  */
 }
 
 function playNewSong(songId) {
@@ -299,7 +345,26 @@ function playNewSong(songId) {
   audioPlayer.load();
 }
 
-function playNextFromQueue(user) {
+function playNextFromQueue() {
+  let now_playing_id = localStorage.getItem("now_playing_id");
+  let now_playing = JSON.parse(localStorage.getItem("now_playing"));
+  let queue = JSON.parse(localStorage.getItem("queue") || "[]");
+  let prev_queue = JSON.parse(localStorage.getItem("prev_queue") || "[]");
+  if (queue.length === 0) {
+    return;
+  } else {
+    if (now_playing_id !== null) {
+      prev_queue.push(now_playing);
+    }
+    playNewSong(queue[0].videoId);
+    queue.shift();
+  }
+  localStorage.setItem("queue", JSON.stringify(queue));
+  localStorage.setItem("prev_queue", JSON.stringify(prev_queue));
+
+  updateQueue(queue);
+
+  /*
   fetch(`http://localhost:6060/queue?user=${user}`).then(async (data) => {
     const queueData = await data.json();
     let queue = queueData.queue;
@@ -328,13 +393,14 @@ function playNextFromQueue(user) {
       updateQueue(newQueueData.queue);
     }
   });
+  */
 }
 
 audioPlayer.onended = () => {
-  const user = "admin";
+  //const user = "admin";
 
   if (!audioPlayer.loop) {
-    playNextFromQueue(user);
+    playNextFromQueue();
   }
 };
 
@@ -353,8 +419,18 @@ skipNextButton.onclick = () => {
 };
 
 skipPreviousButton.onclick = () => {
-  const user = "admin";
+  //const user = "admin";
 
+  const prev_queue = JSON.parse(localStorage.getItem("prev_queue") || "[]");
+  if (prev_queue.length === 0) {
+    audioPlayer.currentTime = 1;
+    return;
+  }
+  playNewSong(prev_queue[prev_queue.length - 1].videoId);
+  prev_queue.pop();
+  localStorage.setItem("prev_queue", JSON.stringify(prev_queue));
+
+  /*
   fetch(`http://localhost:6060/queue/prev/remove/`, {
     method: "POST",
     body: JSON.stringify({ user: user }),
@@ -370,4 +446,5 @@ skipPreviousButton.onclick = () => {
       }
     })
     .catch((err) => console.log(err));
+  */
 };

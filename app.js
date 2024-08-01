@@ -8,9 +8,6 @@ const path = require("path");
 const searchRoutes = require("./api/routes/search");
 const playRoutes = require("./api/routes/play");
 const songDataRoutes = require("./api/routes/songData");
-const queueRoutes = require("./api/routes/queue");
-
-const Player = require("./api/models/player");
 
 mongoose.connect(process.env.mongo_url).then(() => {
   console.log("[INFO] Connected to mongoDB!");
@@ -40,49 +37,9 @@ app.set("view engine", "ejs");
 app.use("/search", searchRoutes);
 app.use("/play", playRoutes);
 app.use("/songData", songDataRoutes);
-app.use("/queue", queueRoutes);
 
 app.use("/index", async (req, res, next) => {
-  const user = `admin`; //implement something that fetches the current user
-
-  let songId;
-  let queue = [];
-
-  try {
-    const userDoc = await Player.findOne({ user: user });
-    if (userDoc) {
-      let currentQueue = userDoc.queue;
-      let currentSong = userDoc.now_playing;
-
-      if (Object.keys(currentSong).length !== 0) {
-        songId = currentSong.videoId;
-      } else {
-        songId =
-          currentQueue.length > 0 ? currentQueue.shift().videoId : undefined;
-      }
-      queue = currentQueue.length > 0 ? currentQueue : [];
-      const update = await Player.updateOne({ user: user }, { queue: queue });
-      if (!update.acknowledged) {
-        console.log(
-          `[INFO] Error while updating user ${user}'s document, see database to diagnose`
-        );
-      }
-
-      const prevQueueUpdate = await Player.updateOne(
-        { user: user },
-        { previous_queue: [] }
-      );
-      if (!prevQueueUpdate.acknowledged) {
-        console.log(
-          `[INFO] Error while updating user ${user}'s document, see database to diagnose`
-        );
-      }
-    }
-
-    res.render("index", { songId: songId, queue: queue });
-  } catch (err) {
-    console.log(err);
-  }
+  res.render("index");
 });
 
 app.use(express.static(path.join(__dirname, "public")));
