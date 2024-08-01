@@ -98,8 +98,61 @@ router.post("/add", async (req, res, next) => {
     }
   }
 
-  return res.status(200).json({ queue: queue });
+  return res.status(200).json({ queue: queue, added: songInfo.videoDetails });
 });
+
+router.post("/prev/add", async (req, res, next) => {
+  const user = req.body.user;
+  const songId = req.body.id;
+
+  if (!user || !songId) {
+    return res.status(400).json({
+      message: "Insufficient information in request body",
+    });
+  }
+
+  if (!ytdl.validateID(songId)) {
+    return res.status(400).json({
+      message: "Song ID invalid",
+    });
+  }
+
+  const songInfo = await ytdl.getInfo(`https://youtube.com/watch?v=${songId}`);
+  if (!songInfo) {
+    return res.status(404).json({
+      message: "Error while fetching data for song",
+    });
+  }
+
+  let prevQueue = [];
+
+  const userDocument = await Player.findOne({ user: user });
+  if (!userDocument) {
+    console.log(
+      `[INFO] Player for current user ${user} doesn't exist, creating a new document`
+    );
+    prevQueue.push(songInfo.videoDetails);
+    const playerState = new Player({
+      _id: new mongoose.Types.ObjectId(),
+      user: user,
+      now_playing: {},
+      previous_queue: prevQueue,
+    });
+    await playerState.save();
+  } else {
+    prevQueue = userDocument.previous_queue;
+    prevQueue.push(songInfo.videoDetails);
+    let update = await Player.updateOne({ user: user }, { previous_queue: prevQueue });
+    if (!update.acknowledged) {
+      console.log(
+        `[INFO] Error while updating user ${user}'s document, see database to diagnose`
+      );
+    }
+  }
+
+  return res.status(200).json({ previous_queue: prevQueue, added: songInfo.videoDetails });
+});
+
 
 router.post("/remove", async (req, res, next) => {
   const user = req.body.user;
@@ -111,6 +164,7 @@ router.post("/remove", async (req, res, next) => {
   }
 
   let queue = [];
+  let removed = {};
 
   const userDocument = await Player.findOne({ user: user });
   if (!userDocument) {
@@ -126,7 +180,7 @@ router.post("/remove", async (req, res, next) => {
     if (queue.length === 0) {
       console.log(`[INFO] User queue already empty, redundant request`);
     } else {
-      queue.shift();
+      removed = queue.shift();
       console.log(`[INFO] User queue found, shifting it`);
     }
     let update = await Player.updateOne({ user: user }, { queue: queue });
@@ -137,7 +191,47 @@ router.post("/remove", async (req, res, next) => {
     }
   }
 
-  return res.status(200).json({ queue: queue });
+  return res.status(200).json({ queue: queue, removed: removed });
+});
+
+router.post("/prev/remove", async (req, res, next) => {
+  const user = req.body.user;
+
+  if (!user) {
+    return res.status(400).json({
+      message: "Insufficient information in request body",
+    });
+  }
+
+  let prevQueue = [];
+  let removed = {};
+
+  const userDocument = await Player.findOne({ user: user });
+  if (!userDocument) {
+    console.log(
+      `[INFO] Player for current user ${user} doesn't exist, can't remove from queue`
+    );
+    return res.status(204).json({
+      message: "User doesn't have a queue",
+    });
+  } else {
+    prevQueue = userDocument.previous_queue;
+
+    if (prevQueue.length === 0) {
+      console.log(`[INFO] User queue already empty, redundant request`);
+    } else {
+      removed = prevQueue.shift();
+      console.log(`[INFO] User queue found, shifting it`);
+    }
+    let update = await Player.updateOne({ user: user }, { previous_queue: prevQueue });
+    if (!update.acknowledged) {
+      console.log(
+        `[INFO] Error while updating user ${user}'s document, see database to diagnose`
+      );
+    }
+  }
+
+  return res.status(200).json({ previous_queue: prevQueue, removed: removed });
 });
 
 module.exports = router;

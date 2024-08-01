@@ -67,6 +67,16 @@ app.use("/index", async (req, res, next) => {
           `[INFO] Error while updating user ${user}'s document, see database to diagnose`
         );
       }
+
+      const prevQueueUpdate = await Player.updateOne(
+        { user: user },
+        { previous_queue: [] }
+      );
+      if (!prevQueueUpdate.acknowledged) {
+        console.log(
+          `[INFO] Error while updating user ${user}'s document, see database to diagnose`
+        );
+      }
     }
 
     res.render("index", { songId: songId, queue: queue });

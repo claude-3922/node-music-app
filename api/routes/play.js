@@ -72,7 +72,6 @@ router.get("/", (req, res, next) => {
 
           const readableStream = ytdl.downloadFromInfo(info, {
             format: format,
-            dlChunkSize: Number(format.contentLength),
           });
 
           readableStream.pipe(res);

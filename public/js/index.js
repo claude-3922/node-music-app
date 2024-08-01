@@ -199,7 +199,10 @@ searchBar.addEventListener("input", () => {
       let listItems = ``;
       if (!data.videos) {
         console.log("No results found.");
-        searchResults.setAttribute("style", "margin: 0px; padding: 0px; display: none;");
+        searchResults.setAttribute(
+          "style",
+          "margin: 0px; padding: 0px; display: none;"
+        );
         return;
       }
       data.videos?.forEach((item) => {
@@ -213,7 +216,7 @@ searchBar.addEventListener("input", () => {
             <a title='${item.channel}' target='_blank' href='${item.channel_url}'> <h6>${item.channel}</h6> </a>
           </span>
           <span class='searchResults-list-buttons'>
-            <img id='${item.id}' class='searchResults-list-buttons-play' width='32' height='32' src='http://localhost:6060/icons/play_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/play_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/play_nofill.svg")' onclick='playNewSong(this.id)'>
+            <img id='${item.id}' class='searchResults-list-buttons-play' width='32' height='32' src='http://localhost:6060/icons/play_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/play_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/play_nofill.svg")' onclick='playFromSearch(this.id)'>
             <img id='${item.id}' class='searchResults-list-buttons-add' width='32' height='32' src='http://localhost:6060/icons/plus_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/plus_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/plus_nofill.svg")' onclick='addToQueue(this.id)'>
           </span>
 
@@ -230,7 +233,6 @@ searchBar.addEventListener("input", () => {
 
 function addToQueue(songId) {
   const user = "admin";
-  console.log(songId);
 
   fetch(`http://localhost:6060/queue/add/`, {
     method: "POST",
@@ -266,18 +268,48 @@ function addToQueue(songId) {
         let newData = await newQueue.json();
         queue = newData.queue;
       }
-      let listItems = ``;
-      if (queue?.length > 0) {
-        queue.forEach((song) => {
-          listItems += `<li>${song.title}</li>`;
-        });
-      } else {
-        listItems += `<li>No item in queue</li>`;
-      }
-
-      document.querySelector(".mainSection ul").innerHTML = `${listItems}`;
+      updateQueue(queue);
     })
     .catch((err) => console.log(err));
+}
+
+function updateQueue(queue) {
+  let listItems = ``;
+  if (queue?.length > 0) {
+    queue.forEach((song) => {
+      listItems += `<li>${song.title}</li>`;
+    });
+  } else {
+    listItems += `<li>No item in queue</li>`;
+  }
+
+  document.querySelector(".mainSection ul").innerHTML = `${listItems}`;
+}
+
+function playFromSearch(songId) {
+  const user = "admin";
+
+  fetch(`http://localhost:6060/queue/now_playing?user=${user}`).then(
+    async (npRes) => {
+      const npData = await npRes.json();
+      const nowPlaying = npData.now_playing;
+      console.log(nowPlaying);
+
+      if (Object.keys(nowPlaying).length > 0) {
+        const newPrevQueueRes = await fetch(
+          `http://localhost:6060/queue/prev/add`,
+          {
+            method: "POST",
+            body: JSON.stringify({ user: user, id: nowPlaying.videoId }),
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        console.log(await newPrevQueueRes.json());
+      }
+    }
+  );
+
+  playNewSong(songId);
 }
 
 function playNewSong(songId) {
@@ -286,3 +318,93 @@ function playNewSong(songId) {
   audioPlayer.type = "audio/webm";
   audioPlayer.load();
 }
+
+function playNextFromQueue(user) {
+  fetch(`http://localhost:6060/queue?user=${user}`).then(async (data) => {
+    const npRes = await fetch(
+      `http://localhost:6060/queue/now_playing?user=${user}`
+    );
+    const npData = await npRes.json();
+    const nowPlaying = npData.now_playing;
+
+    const queueData = await data.json();
+    let queue = queueData.queue;
+    if (queue?.length > 0) {
+      const newData = await fetch(`http://localhost:6060/queue/remove`, {
+        method: "POST",
+        body: JSON.stringify({ user: user }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const newQueueData = await newData.json();
+      playNewSong(newQueueData.removed.videoId);
+
+      const newPrevQueueData = await fetch(
+        `http://localhost:6060/queue/prev/add/`,
+        {
+          method: "POST",
+          body: JSON.stringify({ user: user, id: nowPlaying.videoId }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log(await newPrevQueueData.json());
+
+      updateQueue(newQueueData.queue);
+    }
+  });
+}
+
+audioPlayer.onended = () => {
+  const user = "admin";
+
+  if (!audioPlayer.loop) {
+    playNextFromQueue(user);
+  }
+};
+
+const skipNextButton = document.querySelector(
+  ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-skipEnd"
+);
+
+const skipPreviousButton = document.querySelector(
+  ".playerBar .audioInfo .audioInfo-controls .audioInfo-controls-skipStart"
+);
+
+skipNextButton.onclick = () => {
+  const user = "admin";
+
+  playNextFromQueue(user);
+};
+
+skipPreviousButton.onclick = () => {
+  /*
+  fetch(`http://localhost:6060/previous_queue?user=${user}`).then(async (data) => {
+    const nowPlayingData = await fetch(
+      `http://localhost:6060/queue/now_playing?user=${user}`
+    );
+    const nowPlayingRes = await nowPlayingData.json();
+    const nowPlaying = nowPlayingRes.now_playing;
+
+    const prevQueueData = await data.json();
+    let prevQueue = prevQueueData.queue;
+    if (prevQueue?.length > 0) {
+      const newQueueData = await fetch(
+        `http://localhost:6060/queue/add/`,
+        {
+          method: "POST",
+          body: JSON.stringify({ user: user, id: nowPlaying.videoId }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log(await newQueueData.json());
+      playNewSong(prevQueue[0].videoId);
+      const newPrevQueueRes = await fetch(`http://localhost:6060/previous_queue/remove`, {
+        method: "POST",
+        body: JSON.stringify({ user: user }),
+        headers: { "Content-Type": "application/json" },
+      });
+      //const newPrevQueueData = await newPrevQueueRes.json();
+      //updateQueue(newQueueData.queue);
+    }
+  });
+*/
+};
