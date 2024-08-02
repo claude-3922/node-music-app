@@ -52,89 +52,91 @@
     <div class="searchResults" hidden></div>
 
     <main>
+      <div class="playerBar">
+        <span class="audioPlayer">
+          <a
+            class="audioPlayer-thumbnail"
+            href="http://localhost:6060/images/no_thumbnail.png"
+            target="_blank"
+            title="Thumbnail"
+          >
+            <img
+              class="audioPlayer-thumbnail-image"
+              src="http://localhost:6060/images/no_thumbnail.png"
+              width="100"
+              height="100"
+              title="Thumbnail"
+              onerror="this.onerror = null; this.src=(`http://localhost:6060/images/no_thumbnail.png`)"
+            />
+          </a>
+
+          <div class="audioPlayer-progress" title="Duration" hidden>
+            <p>- / -</p>
+          </div>
+
+          <audio autoplay></audio>
+        </span>
+
+        <span class="audioInfo">
+          <a class="audioInfo-title" href="#">
+            <h1 class="audioInfo-title-text">Not playing anything</h1>
+          </a>
+
+          <a class="audioInfo-channel" href="#">
+            <h3 class="audioInfo-channel-text">-</h3>
+          </a>
+
+          <span class="audioInfo-controls">
+            <img
+              class="audioInfo-controls-skipStart"
+              src="http://localhost:6060/icons/skip-start.svg"
+              title="Previous"
+            />
+
+            <img
+              class="audioInfo-controls-playbackButton"
+              src="http://localhost:6060/icons/play.svg"
+              title="?"
+            />
+
+            <img
+              class="audioInfo-controls-skipEnd"
+              src="http://localhost:6060/icons/skip-end.svg"
+              title="Next"
+            />
+          </span>
+        </span>
+
+        <div class="extraControls">
+          <img
+            class="extraControls-repeat"
+            src="http://localhost:6060/icons/repeat.svg"
+            title="Turn loop on"
+          />
+
+          <img
+            class="extraControls-volume"
+            src="http://localhost:6060/icons/volume.svg"
+            title="Adjust Volume"
+          />
+
+          <input
+            type="range"
+            class="extraControls-volumeRange"
+            min="0"
+            max="100"
+            step="1"
+          />
+        </div>
+      </div>
       <div class="mainSection">
-        <h1>Queue</h1>
+        <h1>Up Next</h1>
         <ul></ul>
       </div>
     </main>
-
-    <div class="playerBar">
-      <span class="audioPlayer">
-        <a
-          class="audioPlayer-thumbnail"
-          href="http://localhost:6060/images/no_thumbnail.png"
-          target="_blank"
-          title="Thumbnail"
-        >
-          <img
-            class="audioPlayer-thumbnail-image"
-            src="http://localhost:6060/images/no_thumbnail.png"
-            width="100"
-            height="100"
-            title="Thumbnail"
-            onerror="this.onerror = null; this.src=(`http://localhost:6060/images/no_thumbnail.png`)"
-          />
-        </a>
-
-        <div class="audioPlayer-progress" title="Duration" hidden>
-          <p>- / -</p>
-        </div>
-
-        <audio autoplay></audio>
-      </span>
-
-      <span class="audioInfo">
-        <a class="audioInfo-title" href="#">
-          <h1 class="audioInfo-title-text">Not playing anything</h1>
-        </a>
-
-        <a class="audioInfo-channel" href="#">
-          <h3 class="audioInfo-channel-text">-</h3>
-        </a>
-
-        <span class="audioInfo-controls">
-          <img
-            class="audioInfo-controls-skipStart"
-            src="http://localhost:6060/icons/skip-start.svg"
-            title="Previous"
-          />
-
-          <img
-            class="audioInfo-controls-playbackButton"
-            src="http://localhost:6060/icons/play.svg"
-            title="?"
-          />
-
-          <img
-            class="audioInfo-controls-skipEnd"
-            src="http://localhost:6060/icons/skip-end.svg"
-            title="Next"
-          />
-        </span>
-      </span>
-
-      <div class="extraControls">
-        <img
-          class="extraControls-repeat"
-          src="http://localhost:6060/icons/repeat.svg"
-          title="Turn loop on"
-        />
-
-        <img
-          class="extraControls-volume"
-          src="http://localhost:6060/icons/volume.svg"
-          title="Adjust Volume"
-        />
-
-        <input
-          type="range"
-          class="extraControls-volumeRange"
-          min="0"
-          max="100"
-          step="1"
-        />
-      </div>
-    </div>
+    <footer>
+      <h4>Data taken from youtube</h4>
+    </footer>
 
     <script src="/js/index.js"></script>
   </body>

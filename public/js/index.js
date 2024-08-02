@@ -3,11 +3,55 @@ const audioPlayer = document.querySelector(".playerBar .audioPlayer audio");
 function updateQueue(queue) {
   let listItems = ``;
   if (queue?.length > 0) {
+    let i = 1;
     queue.forEach((song) => {
-      listItems += `<li>${song.title}</li>`;
+      const thumbnail =
+        song.thumbnails[4]?.url ||
+        song.thumbnails[3]?.url ||
+        song.thumbnails[2]?.url ||
+        song.thumbnails[1]?.url ||
+        song.thumbnails[0]?.url ||
+        `http://localhost:6060/images/no_thumbnail.png`;
+      listItems += `<li>
+        <span class="queueItem-info">
+          <span class="queueItem-index">${i}</span>
+          <span class="queueItem-start">
+            <img height="56" width="56" src="${thumbnail}">
+            <p>${formatDuration(song.lengthSeconds)}</p>
+          </span>
+          <span class="queueItem-middle">
+            <a href="${song.video_url}">
+              <h4>${song.title}</h4>
+            </a>
+            <a href="${song.ownerProfileUrl}">
+              <h6>${song.ownerChannelName}</h6>
+            </a>
+          </span>
+        </span>
+        
+        <span class="queueItem-end">
+          <img 
+          height="32" 
+          width="32" 
+          src="http://localhost:6060/icons/arrow_up.svg"
+          onmouseover="this.src=('http://localhost:6060/icons/arrow_up_fill.svg');"
+          onmouseout="this.src=('http://localhost:6060/icons/arrow_up.svg');"
+          onclick="moveUpQueue(${song});"
+          >
+          <img 
+          height="32"
+          width="32" 
+          src="http://localhost:6060/icons/arrow_down.svg"
+          onmouseover="this.src=('http://localhost:6060/icons/arrow_down_fill.svg');"
+          onmouseout="this.src=('http://localhost:6060/icons/arrow_down.svg');"
+          onclick="moveDownQueue(${song});"
+          >
+        </span>
+      </li>`;
+      i++;
     });
   } else {
-    listItems += `<li>No item in queue</li>`;
+    listItems += `<li style="padding-left: 16px;">No item in queue</li>`;
   }
 
   document.querySelector(".mainSection ul").innerHTML = `${listItems}`;
@@ -21,7 +65,10 @@ window.onload = () => {
       `http://localhost:6060/play?id=${nowPlaying_id}`
     );
     audioPlayer.oncanplaythrough = () => handleSongLoaded(nowPlaying_id);
+    audioPlayer.load();
   }
+
+  localStorage.setItem("prev_queue", "[]");
 
   updateQueue(JSON.parse(localStorage.getItem("queue" || "[]")));
 };
@@ -75,7 +122,7 @@ function handleSongLoaded(songId) {
           `http://localhost:6060/images/no_thumbnail.png`;
 
         changeThumbnail(thumbnail_url);
-        audioPlayer.volume = 1;
+        audioPlayer.volume = localStorage.getItem("volume") || 1;
         document.querySelector(
           ".playerBar .extraControls .extraControls-volumeRange"
         ).value = 100;
@@ -179,6 +226,7 @@ const volumeSlider = document.querySelector(
 volumeSlider.addEventListener("input", (event) => {
   const sliderValue = event.target.value;
   audioPlayer.volume = sliderValue / 100;
+  localStorage.setItem("volume", sliderValue / 100);
 });
 
 const volumeButton = document.querySelector(
@@ -189,9 +237,11 @@ volumeButton.addEventListener("click", () => {
   if (audioPlayer.volume > 0) {
     volumeSlider.value = 0;
     audioPlayer.volume = 0;
+    localStorage.setItem("volume", 0);
   } else if (audioPlayer.volume === 0) {
     volumeSlider.value = 1 * 100;
     audioPlayer.volume = 1;
+    localStorage.setItem("volume", 1);
   }
 });
 
@@ -216,6 +266,9 @@ document.addEventListener("click", () => {
   if (document.activeElement.className === "navBar-start-searchBar") {
     searchResults.removeAttribute("hidden");
   } else {
+    searchBar.value = "";
+    searchResults.innerHTML = `<ul class='searchResults-list'></ul>`;
+    searchResults.style = "padding:0px; margin:0px; display: none;";
     searchResults.setAttribute("hidden", "");
   }
 });
@@ -228,10 +281,7 @@ searchBar.addEventListener("input", () => {
       let listItems = ``;
       if (!data.videos) {
         console.log("No results found.");
-        searchResults.setAttribute(
-          "style",
-          "margin: 0px; padding: 0px; display: none;"
-        );
+        searchResults.style = "padding:0px; margin:0px; display: none;";
         return;
       }
       data.videos?.forEach((item) => {
@@ -282,7 +332,6 @@ function addToQueue(songId) {
 }
 
 function playFromSearch(songId) {
-
   const now_playing_id = localStorage.getItem("now_playing_id");
 
   if (now_playing_id !== null) {
@@ -344,7 +393,6 @@ skipNextButton.onclick = () => {
 };
 
 skipPreviousButton.onclick = () => {
-
   const prev_queue = JSON.parse(localStorage.getItem("prev_queue") || "[]");
   if (prev_queue.length === 0) {
     audioPlayer.currentTime = 1;
