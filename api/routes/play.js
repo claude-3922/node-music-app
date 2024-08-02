@@ -38,7 +38,16 @@ router.get("/", (req, res, next) => {
 
         const readableStream = ytdl.downloadFromInfo(info, {
           format: format,
+          dlChunkSize: Number(format.contentLength),
         });
+
+        console.log(
+          `[INFO] Downloading ${info.videoDetails.videoId}, size ${(
+            Number(format.contentLength) /
+            1024 /
+            1024
+          ).toPrecision(3)} MB`
+        );
 
         readableStream.pipe(res);
       })
