@@ -2,16 +2,11 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
-const mongoose = require("mongoose");
 const path = require("path");
 
 const searchRoutes = require("./api/routes/search");
 const playRoutes = require("./api/routes/play");
 const songDataRoutes = require("./api/routes/songData");
-
-mongoose.connect(process.env.mongo_url).then(() => {
-  console.log("[INFO] Connected to mongoDB!");
-});
 
 app.use(morgan("dev"));
 app.use(cors());
