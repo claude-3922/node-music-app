@@ -30,21 +30,23 @@ function updateQueue(queue) {
         </span>
         
         <span class="queueItem-end">
-          <img 
-          height="32" 
-          width="32" 
-          src="http://localhost:6060/icons/arrow_up.svg"
-          onmouseover="this.src=('http://localhost:6060/icons/arrow_up_fill.svg');"
-          onmouseout="this.src=('http://localhost:6060/icons/arrow_up.svg');"
-          onclick="moveUpQueue(${song});"
+          <img
+          id="${i - 1}"
+          height="40" 
+          width="40" 
+          src="http://localhost:6060/icons/trash_nofill.svg"
+          onmouseover="this.src=('http://localhost:6060/icons/trash_fill.svg');"
+          onmouseout="this.src=('http://localhost:6060/icons/trash_nofill.svg');"
+          onclick="deleteFromQueue(this.id);"
           >
           <img 
+          id="${i - 1}"
           height="32"
           width="32" 
-          src="http://localhost:6060/icons/arrow_down.svg"
-          onmouseover="this.src=('http://localhost:6060/icons/arrow_down_fill.svg');"
-          onmouseout="this.src=('http://localhost:6060/icons/arrow_down.svg');"
-          onclick="moveDownQueue(${song});"
+          src="http://localhost:6060/icons/play_nofill.svg"
+          onmouseover="this.src=('http://localhost:6060/icons/play_fill.svg');"
+          onmouseout="this.src=('http://localhost:6060/icons/play_nofill.svg');"
+          onclick="playFromQueue(this.id);"
           >
         </span>
       </li>`;
@@ -122,10 +124,6 @@ function handleSongLoaded(songId) {
           `http://localhost:6060/images/no_thumbnail.png`;
 
         changeThumbnail(thumbnail_url);
-        audioPlayer.volume = localStorage.getItem("volume") || 1;
-        document.querySelector(
-          ".playerBar .extraControls .extraControls-volumeRange"
-        ).value = 100;
         audioPlayer.ontimeupdate = () => {
           setSongDuration(
             Number(audioPlayer.currentTime),
@@ -346,6 +344,10 @@ function playFromSearch(songId) {
 
 function playNewSong(songId) {
   audioPlayer.setAttribute("src", `http://localhost:6060/play?id=${songId}`);
+  audioPlayer.volume = localStorage.getItem("volume") || 1;
+  document.querySelector(
+    ".playerBar .extraControls .extraControls-volumeRange"
+  ).value = localStorage.getItem("volume") * 100 || 1 * 100;
   audioPlayer.oncanplaythrough = () => handleSongLoaded(songId);
   audioPlayer.load();
 }
@@ -387,18 +389,54 @@ const skipPreviousButton = document.querySelector(
 );
 
 skipNextButton.onclick = () => {
-  const user = "admin";
-
-  playNextFromQueue(user);
+  playNextFromQueue();
 };
 
 skipPreviousButton.onclick = () => {
   const prev_queue = JSON.parse(localStorage.getItem("prev_queue") || "[]");
+  const queue = JSON.parse(localStorage.getItem("queue") || "[]");
+  const now_playing = JSON.parse(localStorage.getItem("now_playing"));
   if (prev_queue.length === 0) {
     audioPlayer.currentTime = 1;
     return;
   }
+
+  queue.unshift(now_playing);
+
   playNewSong(prev_queue[prev_queue.length - 1].videoId);
+
   prev_queue.pop();
+  console.log(queue);
+  updateQueue(queue);
   localStorage.setItem("prev_queue", JSON.stringify(prev_queue));
+  localStorage.setItem("queue", JSON.stringify(queue));
 };
+
+function deleteFromQueue(songIndex) {
+  const queue = JSON.parse(localStorage.getItem("queue") || "[]");
+  if (queue.length === 0 || songIndex > queue.length - 1) {
+    return;
+  }
+  queue.splice(songIndex, 1);
+  localStorage.setItem("queue", JSON.stringify(queue));
+  updateQueue(queue);
+}
+
+function playFromQueue(songIndex) {
+  const queue = JSON.parse(localStorage.getItem("queue") || "[]");
+  const prev_queue = [];
+  const now_playing = JSON.parse(localStorage.getItem("now_playing"));
+  if (queue.length === 0 || songIndex > queue.length - 1) {
+    return;
+  }
+
+  prev_queue.push(now_playing);
+  playNewSong(queue[songIndex].videoId);
+  queue.splice(0, songIndex).forEach((item) => prev_queue.push(item));
+  queue.shift();
+
+  updateQueue(queue);
+
+  localStorage.setItem("prev_queue", JSON.stringify(prev_queue));
+  localStorage.setItem("queue", JSON.stringify(queue));
+}
