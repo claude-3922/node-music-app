@@ -35,6 +35,10 @@ app.use("/play", playRoutes);
 app.use("/songData", songDataRoutes);
 app.use("/index", indexRoutes);
 
+app.get("/", (req, res, next) => {
+  res.redirect("/index");
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {

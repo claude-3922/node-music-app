@@ -4,8 +4,7 @@
   "description": "A music project created as a final project for CS50x. It allows users to look up tracks on youtube and download/stream them on their browser. ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js --ignore /#"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "music",
