@@ -11,7 +11,7 @@ function updateQueue(queue) {
         song.thumbnails[2]?.url ||
         song.thumbnails[1]?.url ||
         song.thumbnails[0]?.url ||
-        `http://localhost:6060/images/no_thumbnail.png`;
+        `/images/no_thumbnail.png`;
       listItems += `<li>
         <span class="queueItem-info">
           <span class="queueItem-index">${i}</span>
@@ -34,18 +34,18 @@ function updateQueue(queue) {
           id="${i - 1}"
           height="40" 
           width="40" 
-          src="http://localhost:6060/icons/trash_nofill.svg"
-          onmouseover="this.src=('http://localhost:6060/icons/trash_fill.svg');"
-          onmouseout="this.src=('http://localhost:6060/icons/trash_nofill.svg');"
+          src="/icons/trash_nofill.svg"
+          onmouseover="this.src=('/icons/trash_fill.svg');"
+          onmouseout="this.src=('/icons/trash_nofill.svg');"
           onclick="deleteFromQueue(this.id);"
           >
           <img 
           id="${i - 1}"
           height="32"
           width="32" 
-          src="http://localhost:6060/icons/play_nofill.svg"
-          onmouseover="this.src=('http://localhost:6060/icons/play_fill.svg');"
-          onmouseout="this.src=('http://localhost:6060/icons/play_nofill.svg');"
+          src="/icons/play_nofill.svg"
+          onmouseover="this.src=('/icons/play_fill.svg');"
+          onmouseout="this.src=('/icons/play_nofill.svg');"
           onclick="playFromQueue(this.id);"
           >
         </span>
@@ -64,7 +64,7 @@ window.onload = () => {
   if (nowPlaying_id !== null) {
     audioPlayer.setAttribute(
       "src",
-      `http://localhost:6060/play?id=${nowPlaying_id}`
+      `/play?id=${nowPlaying_id}`
     );
     audioPlayer.oncanplaythrough = () => handleSongLoaded(nowPlaying_id);
     audioPlayer.load();
@@ -109,7 +109,7 @@ function changeThumbnail(url) {
 
 function handleSongLoaded(songId) {
   //Do stuff after song data is loaded
-  fetch(`http://localhost:6060/songData?id=${songId}`)
+  fetch(`/songData?id=${songId}`)
     .then((res) => {
       res.json().then((videoDetails) => {
         localStorage.setItem("now_playing", JSON.stringify(videoDetails));
@@ -121,7 +121,7 @@ function handleSongLoaded(songId) {
           videoDetails.thumbnails[2]?.url ||
           videoDetails.thumbnails[1]?.url ||
           videoDetails.thumbnails[0]?.url ||
-          `http://localhost:6060/images/no_thumbnail.png`;
+          `/images/no_thumbnail.png`;
 
         changeThumbnail(thumbnail_url);
         audioPlayer.ontimeupdate = () => {
@@ -170,19 +170,19 @@ const playbackButton = document.querySelector(
 audioPlayer.addEventListener("play", () => {
   document
     .querySelector(".navBar .navBar-start .navBar-start-brand img")
-    .setAttribute("src", "http://localhost:6060/icons/soundwave_animated.svg");
+    .setAttribute("src", "/icons/soundwave_animated.svg");
 
   playbackButton.setAttribute("title", "Pause");
-  playbackButton.setAttribute("src", "http://localhost:6060/icons/pause.svg");
+  playbackButton.setAttribute("src", "/icons/pause.svg");
 });
 
 audioPlayer.addEventListener("pause", () => {
   document
     .querySelector(".navBar .navBar-start .navBar-start-brand img")
-    .setAttribute("src", "http://localhost:6060/icons/soundwave.svg");
+    .setAttribute("src", "/icons/soundwave.svg");
 
   playbackButton.setAttribute("title", "Play");
-  playbackButton.setAttribute("src", "http://localhost:6060/icons/play.svg");
+  playbackButton.setAttribute("src", "/icons/play.svg");
 });
 
 playbackButton.addEventListener("click", () => {
@@ -205,13 +205,13 @@ const repeatButton = document.querySelector(
 repeatButton.addEventListener("click", () => {
   if (audioPlayer.loop) {
     repeatButton.setAttribute("title", "Turn loop on");
-    repeatButton.setAttribute("src", "http://localhost:6060/icons/repeat.svg");
+    repeatButton.setAttribute("src", "/icons/repeat.svg");
     audioPlayer.loop = false;
   } else if (!audioPlayer.loop) {
     repeatButton.setAttribute("title", "Turn loop off");
     repeatButton.setAttribute(
       "src",
-      "http://localhost:6060/icons/repeat_black.svg"
+      "/icons/repeat_black.svg"
     );
     audioPlayer.loop = true;
   }
@@ -247,10 +247,10 @@ audioPlayer.onvolumechange = () => {
   if (audioPlayer.volume === 0) {
     volumeButton.setAttribute(
       "src",
-      "http://localhost:6060/icons/volume_mute.svg"
+      "/icons/volume_mute.svg"
     );
   } else if (audioPlayer.volume > 0) {
-    volumeButton.setAttribute("src", "http://localhost:6060/icons/volume.svg");
+    volumeButton.setAttribute("src", "/icons/volume.svg");
   }
 };
 
@@ -273,7 +273,7 @@ document.addEventListener("click", () => {
 
 searchBar.addEventListener("input", () => {
   const query = searchBar.value;
-  fetch(`http://localhost:6060/search?q=${query}`)
+  fetch(`/search?q=${query}`)
     .then(async (res) => {
       let data = await res.json();
       let listItems = ``;
@@ -293,8 +293,8 @@ searchBar.addEventListener("input", () => {
             <a title='${item.channel}' target='_blank' href='${item.channel_url}'> <h6>${item.channel}</h6> </a>
           </span>
           <span class='searchResults-list-buttons'>
-            <img id='${item.id}' class='searchResults-list-buttons-play' width='32' height='32' src='http://localhost:6060/icons/play_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/play_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/play_nofill.svg")' onclick='playFromSearch(this.id)'>
-            <img id='${item.id}' class='searchResults-list-buttons-add' width='32' height='32' src='http://localhost:6060/icons/plus_nofill.svg' onmouseover='this.src=("http://localhost:6060/icons/plus_fill.svg")' onmouseout='this.src=("http://localhost:6060/icons/plus_nofill.svg")' onclick='addToQueue(this.id)'>
+            <img id='${item.id}' class='searchResults-list-buttons-play' width='32' height='32' src='/icons/play_nofill.svg' onmouseover='this.src=("/icons/play_fill.svg")' onmouseout='this.src=("/icons/play_nofill.svg")' onclick='playFromSearch(this.id)'>
+            <img id='${item.id}' class='searchResults-list-buttons-add' width='32' height='32' src='/icons/plus_nofill.svg' onmouseover='this.src=("/icons/plus_fill.svg")' onmouseout='this.src=("/icons/plus_nofill.svg")' onclick='addToQueue(this.id)'>
           </span>
 
         </li>\n`;
@@ -310,7 +310,7 @@ searchBar.addEventListener("input", () => {
 
 function addToQueue(songId) {
   //const user = "admin";
-  fetch(`http://localhost:6060/songData?id=${songId}`)
+  fetch(`/songData?id=${songId}`)
     .then(async (res) => {
       const data = await res.json();
       let songData = data;
@@ -343,7 +343,7 @@ function playFromSearch(songId) {
 }
 
 function playNewSong(songId) {
-  audioPlayer.setAttribute("src", `http://localhost:6060/play?id=${songId}`);
+  audioPlayer.setAttribute("src", `/play?id=${songId}`);
   audioPlayer.volume = localStorage.getItem("volume") || 1;
   document.querySelector(
     ".playerBar .extraControls .extraControls-volumeRange"

@@ -27,7 +27,7 @@ router.get("/", (req, res, next) => {
           id: item.id,
           thumbnail: item.thumbnail
             ? item.thumbnail
-            : `http://localhost/images/def_thumbnail.png`,
+            : `/images/def_thumbnail.png`,
           duration: item.duration,
           channel: item.author.name,
           channel_url: item.author.url,
