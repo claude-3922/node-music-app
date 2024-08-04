@@ -7,6 +7,7 @@ const path = require("path");
 const searchRoutes = require("./api/routes/search");
 const playRoutes = require("./api/routes/play");
 const songDataRoutes = require("./api/routes/songData");
+const indexRoutes = require("./api/routes/index");
 
 app.use(morgan("dev"));
 app.use(cors());
@@ -32,10 +33,7 @@ app.set("view engine", "ejs");
 app.use("/search", searchRoutes);
 app.use("/play", playRoutes);
 app.use("/songData", songDataRoutes);
-
-app.use("/index", async (req, res, next) => {
-  res.render("index");
-});
+app.use("/index", indexRoutes);
 
 app.use(express.static(path.join(__dirname, "public")));
 
