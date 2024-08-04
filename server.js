@@ -5,3 +5,4 @@ const port = 6060;
 
 const server = http.createServer(app);
 server.listen(port);
+console.log(`[INFO] Listening on port ${port}!`)
