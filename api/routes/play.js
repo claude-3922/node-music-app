@@ -35,6 +35,9 @@ exports.getInfoAndDownload = async (req, res, next, url) => {
         ).toPrecision(4)} MB`
       );
 
+      res.setHeader("Accept-Ranges", "bytes");
+      res.statusCode = 206;
+
       readableStream.pipe(res);
       readableStream.on("error", async (err) => {
         console.log(err);
